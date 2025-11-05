@@ -1,5 +1,6 @@
 import re
-from SpatialFormula import Iff, If, And, Or, Not, Left, Right, Front, Back, Verum, Falsum, Prop
+from formula_types.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And, Or, If, Iff
+from formula_types.SpatialOperators import Front, Back, Left, Right
 
 SPATIAL_TOKEN_REGEX = r'''
     (?P<TOP>⊤)

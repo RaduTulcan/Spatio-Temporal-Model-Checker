@@ -1,6 +1,8 @@
 import re
-from SpatialFormulaParser import SPATIAL_TOKEN_REGEX, SpatialParser
-from SpatioTemporalFormula import And, Not, Left, Right, Front, Back, Verum, Falsum, Prop
+from parsers.SpatialFormulaParser import SPATIAL_TOKEN_REGEX, SpatialParser
+from formula_types.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And, Or, If, Iff
+from formula_types.SpatialOperators import Front, Back, Left, Right
+from formula_types.TemporalOperators import Next, Eventually, Always, Until
 
 TEMPORAL_TOKEN_REGEX = r'''
   | (?P<NEXT>X)
@@ -33,8 +35,8 @@ class SpatioTemporalParser(SpatialParser):
 
     def parse_until(self):
         node = self.parse_unary()
-        while self.peek()[0] == "U":
-            self.consume("U")
+        while self.peek()[0] == "UNTIL":
+            self.consume()
             right = self.parse_unary()
             node = Until("U", node, right)
         return node
@@ -76,5 +78,3 @@ class SpatioTemporalParser(SpatialParser):
             return Falsum()
         else:
             raise SyntaxError(f"Unexpected token {self.peek()}")
-
-    def parse_binary(self):

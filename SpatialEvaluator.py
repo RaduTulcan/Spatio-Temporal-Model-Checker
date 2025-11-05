@@ -1,4 +1,4 @@
-from SpatialFormulaParser import tokenize, SpatialParser
+from parsers.SpatialFormulaParser import tokenize, SpatialParser
 from itertools import combinations
 from itertools import product
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         [[], ['pov1'], []]
     ]
 
-    parsed_formula = Parser(tokenize(INPUT_FORMULA_2)).parse()
+    parsed_formula = SpatialParser(tokenize(INPUT_FORMULA_2)).parse()
 
     print(evaluate_validity(parsed_formula, GRID_SIZE, PROPOSITIONS))
 
