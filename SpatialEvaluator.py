@@ -52,7 +52,6 @@ if __name__ == '__main__':
         [[], ['pov1'], []]
     ]
 
-    print(len(generate_grids(GRID_SIZE, PROPOSITIONS)))
     parsed_formula = SpatialParser(tokenize(INPUT_FORMULA_2)).parse()
 
     print(evaluate_validity(parsed_formula, GRID_SIZE, PROPOSITIONS))
