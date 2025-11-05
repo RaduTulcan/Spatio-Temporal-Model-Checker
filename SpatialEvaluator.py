@@ -40,18 +40,19 @@ def evaluate_validity(formula, grid_size, car_propositions):
     return True
 
 if __name__ == '__main__':
-    PROPOSITIONS = ['sv', 'pov1']
+    PROPOSITIONS = ['sv', 'pov1', 'pov2', 'pov3']
     INPUT_FORMULA = "(!(W(sv) <-> F)) -> (W(E(sv)) <-> E(W(sv)))"
     INPUT_FORMULA_2 = "Front(sv)"
 
     # GRID IS GRID_SIZE X GRID_SIZE
-    GRID_SIZE = (3,3)
+    GRID_SIZE = (5,5)
     GRID = [
         [[], [], []],
         [[], ['sv', 'pov1'], []],
         [[], ['pov1'], []]
     ]
 
+    print(len(generate_grids(GRID_SIZE, PROPOSITIONS)))
     parsed_formula = SpatialParser(tokenize(INPUT_FORMULA_2)).parse()
 
     print(evaluate_validity(parsed_formula, GRID_SIZE, PROPOSITIONS))

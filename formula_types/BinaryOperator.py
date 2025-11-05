@@ -1,4 +1,8 @@
 class BinaryOperator:
+    """
+    Class for binary operators.
+    """
+
     def __init__(self, op, left, right):
         self.op = op
         self.left = left

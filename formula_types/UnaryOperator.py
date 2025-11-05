@@ -1,4 +1,7 @@
 class UnaryOperator:
+    """
+    Class for unary operators.
+    """
     def __init__(self, op, operand):
         self.op = op
         self.operand = operand
