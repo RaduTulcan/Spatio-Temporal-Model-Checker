@@ -21,16 +21,15 @@ def generate_trace(trace_model, grid_size):
 
 
 if __name__ == '__main__':
-    INPUT_FORMULA = " G g"
+    INPUT_FORMULA = " b U (a & b)"
     GRID_SIZE = (3,3)
     TRACE_MODEL =[[";;", "g;g;a,g", ";;"],
             [";;", ";a;b", ";;"],
             [";;", "a;b;", "b;;"]]
     TRACE = generate_trace(TRACE_MODEL, GRID_SIZE)
-    POINT = (0,1)
+    POINT = (2,1)
 
     parsed_formula = SpatioTemporalParser(tokenize(INPUT_FORMULA)).parse()
-
     print(parsed_formula.evaluate(TRACE, POINT))
 
 

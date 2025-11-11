@@ -2,10 +2,6 @@ from parsers.SpatialFormulaParser import tokenize, SpatialParser
 from itertools import combinations
 from itertools import product
 
-def powerset(lst):
-    temp = [list(combinations(lst, r)) for r in range(0, len(lst) + 1)]
-    return [list(sublist) for g in temp for sublist in g]
-
 
 def generate_grids(grid_size, car_propositions):
     nr_positions = grid_size[0]*grid_size[1]
@@ -24,7 +20,7 @@ def generate_grids(grid_size, car_propositions):
 def evaluate_assignment(formula, assigned_grid):
     for i in range(0, len(assigned_grid)):
         for j in range(0, len(assigned_grid[i])):
-            if not formula.evaluate(assigned_grid, (i, j)):
+            if not formula.evaluate([assigned_grid], (i, j)):
                 return False
     return True
 
@@ -40,20 +36,19 @@ def evaluate_validity(formula, grid_size, car_propositions):
     return True
 
 if __name__ == '__main__':
-    PROPOSITIONS = ['sv', 'pov1', 'pov2', 'pov3']
-    INPUT_FORMULA = "(!(W(sv) <-> F)) -> (W(E(sv)) <-> E(W(sv)))"
-    INPUT_FORMULA_2 = "Front(sv)"
+    PROPOSITIONS = ['sv', 'pov1']
+    INPUT_FORMULA = "(!(Left(sv) <-> ⊥)) -> (Left(Right(sv)) <-> Right(Left(sv)))"
 
     # GRID IS GRID_SIZE X GRID_SIZE
-    GRID_SIZE = (5,5)
+    GRID_SIZE = (3,3)
     GRID = [
         [[], [], []],
         [[], ['sv', 'pov1'], []],
         [[], ['pov1'], []]
     ]
 
-    parsed_formula = SpatialParser(tokenize(INPUT_FORMULA_2)).parse()
-
+    parsed_formula = SpatialParser(tokenize(INPUT_FORMULA)).parse()
+    print(parsed_formula)
     print(evaluate_validity(parsed_formula, GRID_SIZE, PROPOSITIONS))
 
 

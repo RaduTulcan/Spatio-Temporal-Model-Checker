@@ -2,7 +2,6 @@ from formula_types.UnaryOperator import UnaryOperator
 from formula_types.BinaryOperator import BinaryOperator
 
 
-
 class Next(UnaryOperator):
     """
         Class for temporal next operator.
@@ -12,11 +11,7 @@ class Next(UnaryOperator):
             return False
         else:
             new_trace = trace[1:]
-
-            if type(self.operand) == Next or type(self.operand) == Eventually or type(self.operand) == Always or type(self.operand) == Until:
-                return self.operand.evaluate(new_trace, point)
-            else:
-                return self.operand.evaluate(new_trace[0], point)
+            return self.operand.evaluate(new_trace, point)
 
 
 class Eventually(UnaryOperator):
@@ -26,10 +21,7 @@ class Eventually(UnaryOperator):
 
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
-            if type(self.operand) == Next or type(self.operand) == Eventually or type(self.operand) == Always or type(self.operand) == Until:
-                evaluation = self.operand.evaluate(trace[i:], point)
-            else:
-                evaluation = self.operand.evaluate(trace[i], point)
+            evaluation = self.operand.evaluate(trace[i:], point)
 
             if evaluation:
                 return True
@@ -45,11 +37,7 @@ class Always(UnaryOperator):
 
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
-            if type(self.operand) == Next or type(self.operand) == Eventually or type(self.operand) == Always or type(
-                    self.operand) == Until:
-                evaluation = self.operand.evaluate(trace[i:], point)
-            else:
-                evaluation = self.operand.evaluate(trace[i], point)
+            evaluation = self.operand.evaluate(trace[i:], point)
 
             if not evaluation:
                 return False
@@ -61,4 +49,17 @@ class Until(BinaryOperator):
     """
         Class for temporal until operator.
     """
-    pass
+    def evaluate(self, trace, point):
+        for i in range(0, len(trace)):
+            if i == 0 and self.right.evaluate(trace[i:], point):
+                return True
+
+            if not self.right.evaluate(trace[i:], point):
+                continue
+            else:
+                for j in range(0, i):
+                    if not self.left.evaluate(trace[j:], point):
+                        return False
+                return True
+
+        return False

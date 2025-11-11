@@ -17,7 +17,7 @@ class Back(UnaryOperator):
         Class for spatial back operator.
     """
     def evaluate(self, grid, point):
-        if point[0] == len(grid) - 1:
+        if point[0] == len(grid[0]) - 1:
             return False
         else:
             return self.operand.evaluate(grid, (point[0] + 1, point[1]))
@@ -39,7 +39,7 @@ class Right(UnaryOperator):
         Class for spatial right operator.
     """
     def evaluate(self, grid, point):
-        if point[1] == len(grid[point[0]]) - 1:
+        if point[1] == len(grid[0][point[0]]) - 1:
             return False
         else:
             return self.operand.evaluate(grid, (point[0], point[1] + 1))

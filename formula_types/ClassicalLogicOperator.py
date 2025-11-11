@@ -35,7 +35,7 @@ class Prop:
         return self.name
 
     def evaluate(self, grid, point):
-        return self.name in grid[point[0]][point[1]]
+        return self.name in grid[0][point[0]][point[1]]
 
 
 # --------------------------------------------------------------------------
