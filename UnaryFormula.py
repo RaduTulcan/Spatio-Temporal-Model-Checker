@@ -1,6 +1,9 @@
-class UnaryOperator:
+from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+
+
+class UnaryFormula(HybridSpatioTemporalFormula):
     """
-    Class for unary operators.
+    Class for unary formulas.
     """
     def __init__(self, op, operand):
         self.op = op

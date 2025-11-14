@@ -1,8 +1,8 @@
 import re
-from parsers.SpatialFormulaParser import SPATIAL_TOKEN_REGEX, SpatialParser
-from formula_types.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And, Or, If, Iff
-from formula_types.SpatialOperators import Front, Back, Left, Right
-from formula_types.TemporalOperators import Next, Eventually, Always, Until
+from optimized_version.parsers_optimized.SpatialFormulaParser import SPATIAL_TOKEN_REGEX, SpatialParser
+from optimized_version.formula_types_optimized.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And
+from optimized_version.formula_types_optimized.SpatialOperators import Front, Back, Left, Right
+from optimized_version.formula_types_optimized.TemporalOperators import Next, Eventually, Always, Until
 
 TEMPORAL_TOKEN_REGEX = r'''
   | (?P<NEXT>X)

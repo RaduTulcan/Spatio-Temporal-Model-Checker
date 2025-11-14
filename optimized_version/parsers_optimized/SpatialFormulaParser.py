@@ -1,6 +1,6 @@
 import re
-from formula_types.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And, Or, If, Iff
-from formula_types.SpatialOperators import Front, Back, Left, Right
+from optimized_version.formula_types_optimized.ClassicalLogicOperator import Verum, Falsum, Prop, Not, And, Or, If, Iff
+from optimized_version.formula_types_optimized.SpatialOperators import Front, Back, Left, Right
 
 SPATIAL_TOKEN_REGEX = r'''
     (?P<TOP>⊤)
@@ -16,7 +16,7 @@ SPATIAL_TOKEN_REGEX = r'''
   | (?P<RIGHT>Right)
   | (?P<LPAREN>\()
   | (?P<RPAREN>\))
-  | (?P<PROP>[a-z][a-z0-9_]*)
+  | (?P<PROP>[a-y][a-y0-9_]*)
   | (?P<SPACE>\s+)'''
 
 

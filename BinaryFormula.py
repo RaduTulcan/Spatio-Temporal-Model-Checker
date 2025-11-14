@@ -1,4 +1,7 @@
-class BinaryOperator:
+from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+
+
+class BinaryFormula(HybridSpatioTemporalFormula):
     """
     Class for binary operators.
     """
