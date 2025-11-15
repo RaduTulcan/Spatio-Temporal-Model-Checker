@@ -1,5 +1,5 @@
 from itertools import chain, combinations, product
-
+from math import comb
 import HybridSpatioTemporalFormula
 from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 import copy
@@ -83,6 +83,13 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
 
     print("|Total amount of grids generated:", len(grids))
 
+    nr_traces: int = 0
+
+    for i in range(1, max_trace_length + 1):
+        nr_traces += len(grids)**i
+
+    print("|Total amount of traces to check:", nr_traces)
+
     # generate all traces with the available grids and up to the given length
     for length in range(1, max_trace_length + 1):
         for tup in product(grids, repeat=length):
@@ -121,7 +128,7 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
     :param show_traces: whether the satisfying traces should be shown in the console
     """
 
-    counter = 1
+    counter = 0
 
     # evaluate the input formula on all the generated traces over the given propositions
     # and nominals, and with maximal length max_trace_length
