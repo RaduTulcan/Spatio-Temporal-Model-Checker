@@ -81,7 +81,7 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
 
             grids.append(placement)
 
-    print("Total amount of grids generated:", len(grids))
+    print("|Total amount of grids generated:", len(grids))
 
     # generate all traces with the available grids and up to the given length
     for length in range(1, max_trace_length + 1):
@@ -130,12 +130,12 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
 
         if sat_points:
             if show_traces:
-                print("Satisfying trace #", counter, " with satisfying points: ", sat_points)
-                print("--------------------------------------------------------------------")
-                print(t, "\n")
+                print("\t |Satisfying trace #", counter, " with satisfying points: ", sat_points)
+                print("\t |--------------------------------------------------------------------")
+                print("\t |", t, "\n")
             counter = counter + 1
 
-    print("A total of ", counter, " satisfying traces found.")
+    print("|A total of ", counter, " satisfying traces found.")
 
 
 if __name__ == '__main__':
