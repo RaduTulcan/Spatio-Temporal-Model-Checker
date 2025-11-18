@@ -16,7 +16,7 @@ SPATIAL_TOKEN_REGEX = r'''
   | (?P<RIGHT>Right)
   | (?P<LPAREN>\()
   | (?P<RPAREN>\))
-  | (?P<PROP>[a-z][a-z0-9_]*)
+  | (?P<PROP>[a-y][a-y0-9_]*)
   | (?P<SPACE>\s+)'''
 
 def tokenize(formula: str) -> list[tuple[str, str]]:

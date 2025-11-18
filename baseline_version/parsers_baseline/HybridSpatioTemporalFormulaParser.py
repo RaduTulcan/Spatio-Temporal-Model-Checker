@@ -9,7 +9,7 @@ from baseline_version.formula_types_baseline.TemporalFormula import Next, Eventu
 
 # regex for hybrid syntax
 HYBRID_TOKEN_REGEX: str = r'''
-    (?P<NOM>z[0-9_]*)
+    | (?P<NOM>z[0-9_]*)
     | (?P<AT>@z[0-9_]*)
     | (?P<BIND>↓z[0-9_]*)
 '''
