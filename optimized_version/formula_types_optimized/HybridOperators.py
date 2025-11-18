@@ -1,5 +1,4 @@
-from UnaryFormula import UnaryOperator
-
+from UnaryFormula import UnaryFormula
 
 class Nom:
     """
@@ -15,7 +14,7 @@ class Nom:
         return point == grid[0][self.name]
 
 
-class At(UnaryOperator):
+class At(UnaryFormula):
 
     def __init__(self, name, op, operand):
         super().__init__(op, operand)
@@ -26,7 +25,7 @@ class At(UnaryOperator):
         return self.operand.evaluate(grid, grid[0][self.name])
 
 
-class Bind(UnaryOperator):
+class Bind(UnaryFormula):
 
     def __init__(self, name, op, operand):
         super().__init__(op, operand)

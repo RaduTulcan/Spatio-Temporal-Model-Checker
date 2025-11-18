@@ -7,7 +7,7 @@ from optimized_version.formula_types_optimized.SpatialOperators import Front, Ba
 from optimized_version.formula_types_optimized.TemporalOperators import Next, Eventually, Always
 
 HYBRID_TOKEN_REGEX = r'''
-    (?P<NOM>z[0-9_]*)
+    | (?P<NOM>z[0-9_]*)
     | (?P<AT>@z[0-9_]*)
     | (?P<BIND>↓z[0-9_]*)
 '''
@@ -66,4 +66,4 @@ class HybridSpatioTemporalParser(SpatioTemporalParser):
             self.consume("BOT")
             return Falsum()
         else:
-            raise SyntaxError(f"Unexpected token {self.peek()}")
+            raise SyntaxError("Unexpected token:", kind)

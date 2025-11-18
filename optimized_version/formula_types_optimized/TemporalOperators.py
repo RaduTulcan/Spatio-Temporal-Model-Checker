@@ -1,8 +1,8 @@
-from baseline_version.formula_types_baseline import UnaryOperator
-from baseline_version.formula_types_baseline import BinaryOperator
+from UnaryFormula import UnaryFormula
+from BinaryFormula import BinaryFormula
 
 
-class Next(UnaryOperator):
+class Next(UnaryFormula):
     """
         Class for temporal next operator.
     """
@@ -14,7 +14,7 @@ class Next(UnaryOperator):
             return self.operand.evaluate(new_trace, point)
 
 
-class Eventually(UnaryOperator):
+class Eventually(UnaryFormula):
     """
         Class for temporal eventually operator.
     """
@@ -30,7 +30,7 @@ class Eventually(UnaryOperator):
 
 
 
-class Always(UnaryOperator):
+class Always(UnaryFormula):
     """
         Class for temporal always operator.
     """
@@ -45,7 +45,7 @@ class Always(UnaryOperator):
         return True
 
 
-class Until(BinaryOperator):
+class Until(BinaryFormula):
     """
         Class for temporal until operator.
     """

@@ -154,7 +154,7 @@ if __name__ == '__main__':
     nominals = ["z", "z2"]
 
     # list of assumptions (restrict the traces and points of interest)
-    assumptions: list[str] = []
+    assumptions: list[str] = ["G(! @z z2)"]
 
     # list of conclusions (formulas to be checked at all traces and spatial
     # points in which the assumptions hold)
@@ -208,9 +208,9 @@ if __name__ == '__main__':
     print("------------------------------------------------")
     print("The formula ", parsed_formula, " is true at the following spatial points w.r.t. the given trace:", satisfying_points(parsed_formula, trace, grid_size), '\n')
 
-    # ---------------------------------------------------------------------------
-    # 3. RETRIEVE POINTS FROM THE GRID WHERE THE FORMULA HOLDS FOR A GIVEN TRACE
-    # ---------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # 3. RETRIEVE POINTS FROM THE GRID WHERE THE FORMULA HOLDS FOR ARBITRARY TRACES
+    # -----------------------------------------------------------------------------
 
     print("EVALUATION WITH RESPECT TO GRID SIZE")
     print("------------------------------------------------")

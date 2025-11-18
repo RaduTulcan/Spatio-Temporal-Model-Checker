@@ -1,7 +1,7 @@
-from UnaryFormula import UnaryOperator
+from UnaryFormula import UnaryFormula
 
 
-class Front(UnaryOperator):
+class Front(UnaryFormula):
     """
        Class for spatial front operator.
     """
@@ -9,7 +9,7 @@ class Front(UnaryOperator):
         return self.operand.evaluate(grid, (point[0] - 1, point[1]))
 
 
-class Back(UnaryOperator):
+class Back(UnaryFormula):
     """
         Class for spatial back operator.
     """
@@ -17,7 +17,7 @@ class Back(UnaryOperator):
         return self.operand.evaluate(grid, (point[0] + 1, point[1]))
 
 
-class Left(UnaryOperator):
+class Left(UnaryFormula):
     """
         Class for spatial left operator.
     """
@@ -25,7 +25,7 @@ class Left(UnaryOperator):
         return self.operand.evaluate(grid, (point[0], point[1] - 1))
 
 
-class Right(UnaryOperator):
+class Right(UnaryFormula):
     """
         Class for spatial right operator.
     """

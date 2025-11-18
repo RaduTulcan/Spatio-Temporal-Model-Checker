@@ -1,5 +1,5 @@
-from UnaryFormula import UnaryOperator
-from BinaryFormula import BinaryOperator
+from UnaryFormula import UnaryFormula
+from BinaryFormula import BinaryFormula
 
 
 class Verum:
@@ -41,7 +41,7 @@ class Prop:
 # --------------------------------------------------------------------------
 # 1-ary operators
 # --------------------------------------------------------------------------
-class Not(UnaryOperator):
+class Not(UnaryFormula):
     """
        Class for logical negation.
     """
@@ -54,7 +54,7 @@ class Not(UnaryOperator):
 # --------------------------------------------------------------------------
 
 
-class And(BinaryOperator):
+class And(BinaryFormula):
     """
        Class for logical constant conjunction.
     """
@@ -65,7 +65,7 @@ class And(BinaryOperator):
         return f"({self.left} {self.op} {self.right})"
 
 
-class If(BinaryOperator):
+class If(BinaryFormula):
     """
        Class for logical implication.
     """
@@ -76,7 +76,7 @@ class If(BinaryOperator):
         return f"({self.left} {self.op} {self.right})"
 
 
-class Iff(BinaryOperator):
+class Iff(BinaryFormula):
     """
        Class for logical bi-implication.
     """
@@ -88,7 +88,7 @@ class Iff(BinaryOperator):
         return f"({self.left} {self.op} {self.right})"
 
 
-class Or(BinaryOperator):
+class Or(BinaryFormula):
     """
        Class for logical disjunction.
     """
