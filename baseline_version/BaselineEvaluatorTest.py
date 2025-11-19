@@ -2,8 +2,10 @@ from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from baseline_version.evaluator_baseline.SpatioTemporalEvaluator import satisfying_trace_points
 from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 from timeit import default_timer as timer
+# Rose apologizes to imperative programmers OTL
+from functools import reduce
 
-
+#TODO: It would be ideal to parameterize the evaluator so that we can reuse the same test suite for each version of the code
 def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str], grid_size: tuple[int, int], trace_max_length: int, show_traces: bool):
     """
     Returns for a given formula all (trace, points) tuples where the formula holds.
@@ -39,10 +41,78 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
 
     print("|Time elapsed:", end - start, "\n")
 
+def front_back_test(test_index: int):
+    run_evaluator(test_index, [], ['z'], [], ["Front(Back(z)) <-> Back(Front(z))"], (3,3), 3, False)
+
+def same_name_test(test_index: int):
+    run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False)
+
+#TODO:Question: Do the formulas all come with an implicit G()? If not, Rose's tests require revision.
+#TODO: Revise error-handling in evaluator to better support formulas which sometimes go outside the grid bounds. The evaluator should raise an exception for out of bounds access,
+# then the exception should be caught so that the relevant trace is discarded, but unlike the current version, the search for other satisfying traces should continue.
+#TODO: Revise evaluator OR tests (not sure which) to correctly handle X modality near the end of a trace...
+
+# Test description: We test that one vehicle can safely follow another in the same lane. z0 is SV, z1 is POV1, z2 is a temporary variable. The first assumption says that POV brakes
+# arbitrarily, sometimes staying still and other times moving forward. The second assumption says that SV follows POV1 as closely as possible without violating safety, i.e., we only
+# stay in place if POV is directly ahead. The conclusion says the two vehicles never collide.
+# Limitation: Although we wish to model the scenario where SV is behind POV, we technically allow their positions to be switched
+# Usefulness: We need a minimal, scalable "practical" example. This fills those requirements.
+def one_lane_follow_test(test_index:int, road_length: int):
+    run_evaluator(test_index, [], ['z0', 'z1'], ["@z1 ↓z2 X @z1  (z2 | Back z2)", "@z0 ↓z2 X ((!z1 & Back z2 ) | (z2 & Front z1) )"] , ["~(@z0 z1)"], (1,road_length), 3, False)
+
+# Test description: We model a 4-way intersection where one road has priority over the other, so that only one need to stop. We consider an N by N grid where the POV vehicle moves 
+# left-to-right without stopping. The SV moves back to front and stops if POV is on track to collide. z0 is SV, z1 is POV, z2 is temporary variable.
+# First assumption says POV moves in a straight line, second assumption says SV brakes (only) when needed, conclusion is collision freedom
+# Usefulness: The grid scales quadratically which allows us to generate large test cases easily. Crossing an intersection allows us to demonstrate a higher level of generality.
+def safe_intersection_priority(test_index: int, grid_size: int):
+    run_evaluator(test_index, [], ['z0', 'z1'], ["@z1 ↓z2 X @z1 (Left z2)", "@z0 ↓z2 X ((!z1 & Back z2) | (z2 & Front z1) )"], ["~(@z0 z1)"], (grid_size, grid_size), 3, False)
+
+#TODO: Rose is not entirely confident in this specification because it is complicated.
+# Test description: In this two-lane scenario, POV1 moves forward at uneven speed. Initially SV moves forward at even speed. If it is ever directly behind POV1, it swerves to either 
+# side, then drives at high speed to overtake POV1, swerves in either direction when safe, then drives normally
+# Limitations: When the vehicle swerves, it does not move forward. When it drives fast, it teleports over the middle space. The directions of the two swerves are unrelated.
+# Usefulness: Stress-tests the Until operator. "Non-trivial example". Helps demonstrate the value of optimizing one vehicle when the other clearly cannot be optimized 
+# (though we have other tests which demonstrate that same point)
+def safe_passing(test_index: int, road_length: int):
+    run_evaluator(test_index, [], ['z0', 'z1'], 
+                  ["@z1 ↓z2 X @z1  (z2 | Back z2)", #z1 moves forward or stays in place
+                   "  (@z0 ↓z2 X @z0  (Back z2)) "  #z0 initially moves forward
+                   "U (@z0 ↓z2 ((Front z1) & X (@z0 (Left z2 | Right z2)))" #then dodges left or right to avoid z1
+                   "U ((@z0 ↓z2 X @z0  (Back (Back z2))) " # then drives twice as fast
+                   "U ((@z0 ↓z2 ((!(Left z1)|(Right z1)) & X (@z0 (Left z2 | Right z2)))) " # then dodges back when safe
+                   "U  (@z0 ↓z2 X @z0  (Back z2)))))"], # then drives normally
+                   ["~(@z0 z1)"], (2, road_length), 3, False)
+    
+# Test description: In this test, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. It can join the platoon by switching lanes
+# if the resulting position is both behind a car of the platoon and is safe.
+# Limitations: The platoon cars can be split between two lanes, but they should not be. This could be fixed with additional constraints that only hold initially.
+# Usefulness: Most other tests only scale the road while keeping the number of vehicles and the formulas the same. This test scales the number of vehicles and the size of the formulas,
+# which allows us to evaluate a different aspect of scalability compared to the other test cases.
+def join_platoon(test_index: int, platoon_size: int, road_length: int):
+    pov_noms = ["z"+str(i+1) for i in range(platoon_size)]
+    noms = ["z0"] + pov_noms  # and z is a temporary
+    no_collide = "~({})".format(reduce((lambda x, acc: x + "|" + acc), pov_noms))
+    each_front = ["Front " + n for n in pov_noms]
+    some_front = reduce((lambda x, acc: x + "|" + acc), each_front)
+    sv_assump = "@z0 ↓z X ((Back z)|(({0})&(Left z | Right z)&({1})))".format(some_front, no_collide)
+    pov_assumps = [format("@z{0} ↓z X (@z{0} (Back z))".format(str(i+1))) for i in range(platoon_size)]
+    assumps = [sv_assump] + pov_assumps
+    postcond = "@z0 ({})".format(no_collide)
+    print(assumps)
+    run_evaluator(test_index, [], noms, assumps, [postcond], (2, road_length), 3, False)
 
 if __name__ == '__main__':
     # Test 1
-    run_evaluator(1, [], ['z'], [], ["Front(Back(z)) <-> Back(Front(z))"], (3,3), 3, False)
-
+    front_back_test(1)
     # Test 2
-    run_evaluator(2, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False)
+    same_name_test(2)
+    # Commented out because most of them go out of bounds
+    #Test 3
+    #one_lane_follow_test(3, 5)
+    #Test 4
+    #safe_intersection_priority(4, 5)
+    #Test 5
+    #safe_passing(5, 3)
+    #Test 6
+    #join_platoon(6, 2, 5)
+    
