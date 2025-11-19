@@ -5,12 +5,29 @@ from baseline_version.formula_types_baseline.ClassicalLogicFormula import Verum,
 from baseline_version.formula_types_baseline.SpatialFormula import Front, Back, Left, Right
 from baseline_version.formula_types_baseline.TemporalFormula import Next, Eventually, Always, Until
 
+NEXT = "NEXT"
+EVENTUALLY = "EVENTUALLY"
+ALWAYS = "ALWAYS"
+UNTIL = "UNTIL"
+SPACE = "SPACE"
+AND = "AND"
+TOP = "TOP"
+BOT = "BOT"
+NOT = "NOT"
+FRONT = "FRONT"
+BACK = "BACK"
+LEFT = "LEFT"
+RIGHT = "RIGHT"
+LPAREN = "LPAREN"
+RPAREN = "RPAREN"
+PROP = "PROP"
+
 # regex for temporal syntax
 TEMPORAL_TOKEN_REGEX = r'''
-  | (?P<NEXT>X)
-  | (?P<EVENTUALLY>F)
-  | (?P<ALWAYS>G)
-  | (?P<UNTIL>U)'''
+  | (?P<''' + NEXT + '''>X)
+  | (?P<''' + EVENTUALLY + '''>F)
+  | (?P<''' + ALWAYS + '''>G)
+  | (?P<''' + UNTIL + '''>U)'''
 
 # regex for spatio-temporal formulas
 SPATIOTEMPORAL_TOKEN_REGEX = "".join([SPATIAL_TOKEN_REGEX, TEMPORAL_TOKEN_REGEX])
@@ -26,7 +43,7 @@ def tokenize(formula: str) -> list[tuple[str, str]]:
     for match in re.finditer(SPATIOTEMPORAL_TOKEN_REGEX, formula, re.VERBOSE):
         kind: str = match.lastgroup
         value: str = match.group()
-        if kind != "SPACE":
+        if kind != SPACE:
             tokens.append((kind, value))
     return tokens
 
@@ -39,7 +56,7 @@ class SpatioTemporalParser(SpatialParser):
         :return: the parsed conjunction
         """
         node: HybridSpatioTemporalFormula = self.parse_until()
-        while self.peek()[0] == "AND":
+        while self.peek()[0] == AND:
             self.consume()
             right: HybridSpatioTemporalFormula = self.parse_until()
             node = And("∧", node, right)
@@ -51,7 +68,7 @@ class SpatioTemporalParser(SpatialParser):
         :return: the parsed formula
         """
         node: HybridSpatioTemporalFormula = self.parse_unary()
-        while self.peek()[0] == "UNTIL":
+        while self.peek()[0] == UNTIL:
             self.consume()
             right: HybridSpatioTemporalFormula = self.parse_unary()
             node = Until("U", node, right)
@@ -66,38 +83,38 @@ class SpatioTemporalParser(SpatialParser):
         value: str
         kind, value = self.peek()
 
-        if kind in ("NOT", "FRONT", "BACK", "LEFT", "RIGHT", "NEXT", "EVENTUALLY", "ALWAYS"):
+        if kind in (NOT, FRONT, BACK, LEFT, RIGHT, NEXT, EVENTUALLY, ALWAYS):
             self.consume()
             operand: HybridSpatioTemporalFormula = self.parse_unary()
 
-            if kind == "NOT":
+            if kind == NOT:
                 return Not(value, operand)
-            elif kind == "FRONT":
+            elif kind == FRONT:
                 return Front(value, operand)
-            elif kind == "BACK":
+            elif kind == BACK:
                 return Back(value, operand)
-            elif kind == "LEFT":
+            elif kind == LEFT:
                 return Left(value, operand)
-            elif kind == "RIGHT":
+            elif kind == RIGHT:
                 return Right(value, operand)
-            elif kind == "NEXT":
+            elif kind == NEXT:
                 return Next(value, operand)
-            elif kind == "EVENTUALLY":
+            elif kind == EVENTUALLY:
                 return Eventually(value, operand)
-            elif kind == "ALWAYS":
+            elif kind == ALWAYS:
                 return Always(value, operand)
-        elif kind == "LPAREN":
-            self.consume("LPAREN")
+        elif kind == LPAREN:
+            self.consume(LPAREN)
             node: HybridSpatioTemporalFormula = self.parse_iff()
-            self.consume("RPAREN")
+            self.consume(RPAREN)
             return node
-        elif kind == "PROP":
-            return Prop(self.consume("PROP")[1])
-        elif kind == "TOP":
-            self.consume("TOP")
+        elif kind == PROP:
+            return Prop(self.consume(PROP)[1])
+        elif kind == TOP:
+            self.consume(TOP)
             return Verum()
-        elif kind == "BOT":
-            self.consume("BOT")
+        elif kind == BOT:
+            self.consume(BOT)
             return Falsum()
         else:
             raise SyntaxError(f"Unexpected token {self.peek()}")

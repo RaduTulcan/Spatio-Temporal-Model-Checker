@@ -1,6 +1,9 @@
+import copy
+
+from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from UnaryFormula import UnaryFormula
 
-class Nom:
+class Nom(HybridSpatioTemporalFormula):
     """
        Class for logical propositions.
     """
@@ -15,7 +18,9 @@ class Nom:
 
 
 class At(UnaryFormula):
-
+    """
+       Class for hybrid at-formulas.
+    """
     def __init__(self, name, op, operand):
         super().__init__(op, operand)
         self.name = name
@@ -26,11 +31,17 @@ class At(UnaryFormula):
 
 
 class Bind(UnaryFormula):
-
+    """
+       Class for hybrid bind-formulas.
+    """
     def __init__(self, name, op, operand):
         super().__init__(op, operand)
         self.name = name
 
     def evaluate(self, grid, point):
-        grid[0][self.name] = point
+        copy_grid = copy.deepcopy(grid)
+
+        for i in range(0, len(copy_grid)):
+            copy_grid[i][self.name] = point
+
         return self.operand.evaluate(grid, point)

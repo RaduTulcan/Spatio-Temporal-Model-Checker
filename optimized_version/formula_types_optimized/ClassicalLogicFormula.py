@@ -1,8 +1,9 @@
+from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from UnaryFormula import UnaryFormula
 from BinaryFormula import BinaryFormula
 
 
-class Verum:
+class Verum(HybridSpatioTemporalFormula):
     """
     Class for logical constant "true".
     """
@@ -13,7 +14,7 @@ class Verum:
         return True
 
 
-class Falsum:
+class Falsum(HybridSpatioTemporalFormula):
     """
     Class for logical constant "false".
     """
@@ -24,7 +25,7 @@ class Falsum:
         return False
 
 
-class Prop:
+class Prop(HybridSpatioTemporalFormula):
     """
        Class for logical propositions.
     """

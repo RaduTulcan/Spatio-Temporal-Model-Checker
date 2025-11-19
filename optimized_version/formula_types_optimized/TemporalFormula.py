@@ -21,9 +21,8 @@ class Eventually(UnaryFormula):
 
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
-            evaluation = self.operand.evaluate(trace[i:], point)
 
-            if evaluation:
+            if self.operand.evaluate(trace[i:], point):
                 return True
 
         return False
@@ -37,9 +36,8 @@ class Always(UnaryFormula):
 
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
-            evaluation = self.operand.evaluate(trace[i:], point)
 
-            if not evaluation:
+            if not self.operand.evaluate(trace[i:], point):
                 return False
 
         return True
@@ -51,10 +49,11 @@ class Until(BinaryFormula):
     """
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
-            if i == 0 and self.right.evaluate(trace[i:], point):
+            eval_right = self.right.evaluate(trace[i:], point)
+            if i == 0 and eval_right:
                 return True
 
-            if not self.right.evaluate(trace[i:], point):
+            if not eval_right:
                 continue
             else:
                 for j in range(0, i):

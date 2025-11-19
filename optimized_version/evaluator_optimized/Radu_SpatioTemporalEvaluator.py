@@ -143,14 +143,14 @@ if __name__ == '__main__':
     propositions = []
 
     # list of nominals
-    nominals = ["z", "z2"]
+    nominals = ["z", "z2", "z3"]
 
     # list of assumptions (restrict the traces and points of interest)
-    assumptions: list[str] = ["G(! @z z2)"]
+    assumptions: list[str] = []
 
     # list of conclusions (formulas to be checked at all traces and spatial
     # points in which the assumptions hold)
-    conclusions: list[str] = ["↓z F(z & z2)"]
+    conclusions: list[str] = ["@z  ↓z2 ((@z3  ↓z2 z3) & @z2 z)"]
 
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
     # compute the satisfying trace-point pairs
-    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, 2, True)
+    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, 2, False)
 
 
 

@@ -151,14 +151,14 @@ if __name__ == '__main__':
     propositions = []
 
     # list of nominals
-    nominals = ["z", "z2"]
+    nominals = ["z", "z2", "z3"]
 
     # list of assumptions (restrict the traces and points of interest)
-    assumptions: list[str] = ["G(! @z z2)"]
+    assumptions: list[str] = ["1"]
 
     # list of conclusions (formulas to be checked at all traces and spatial
     # points in which the assumptions hold)
-    conclusions: list[str] = ["↓z F(z & z2)"]
+    conclusions: list[str] = ["@z  :z2 ((@z3  ↓z2 z3) & @z2 z)"]
 
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     # -------------------------------------------------------------------------
 
     # spatial point in the grid
-    point: tuple[int, int] = (2, 1)
+    point: tuple[int, int] = (0, 1)
 
     # conjunction of assumptions and conclusion
     input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
@@ -214,4 +214,4 @@ if __name__ == '__main__':
 
     print("EVALUATION WITH RESPECT TO GRID SIZE")
     print("------------------------------------------------")
-    satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, 2, True)
+    satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, 2, False)
