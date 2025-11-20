@@ -50,15 +50,10 @@ class Until(BinaryFormula):
     def evaluate(self, trace, point):
         for i in range(0, len(trace)):
             eval_right = self.right.evaluate(trace[i:], point)
-            if i == 0 and eval_right:
+            if eval_right:
                 return True
-
-            if not eval_right:
-                continue
-            else:
-                for j in range(0, i):
-                    if not self.left.evaluate(trace[j:], point):
-                        return False
-                return True
-
+            
+            elif not self.left.evaluate(trace[i:], point):
+                return False
+            
         return False
