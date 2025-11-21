@@ -5,7 +5,6 @@ from timeit import default_timer as timer
 # Rose apologizes to imperative programmers OTL
 from functools import reduce
 
-#TODO: It would be ideal to parameterize the evaluator so that we can reuse the same test suite for each version of the code
 def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str], grid_size: tuple[int, int], trace_max_length: int, show_traces: bool):
     """
     Returns for a given formula all (trace, points) tuples where the formula holds.
@@ -47,9 +46,6 @@ def front_back_test(test_index: int):
 def same_name_test(test_index: int):
     run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False)
 
-#TODO: Revise error-handling in evaluator to better support formulas which sometimes go outside the grid bounds. The evaluator should raise an exception for out of bounds access,
-# then the exception should be caught so that the relevant trace is discarded, but unlike the current version, the search for other satisfying traces should continue.
-
 # Test description: We test that one vehicle can safely follow another in the same lane. z0 is SV, z1 is POV1, z2 is a temporary variable. The first assumption says that POV brakes
 # arbitrarily, sometimes staying still and other times moving forward. The second assumption says that SV follows POV1 as closely as possible without violating safety, i.e., we only
 # stay in place if POV is directly ahead. The conclusion says the two vehicles never collide.
@@ -73,7 +69,6 @@ def safe_intersection_priority(test_index: int, grid_size: int):
                    "G (@z0 ↓z2 X ((!z1 & Back z2) | (z2 & Front z1) ))"],  #Moves bottom-to-top except it stops to avoid other vehicle.
                    ["G(~(@z0 z1))"], (grid_size, grid_size), 3, False)
 
-#TODO: Rose is not entirely confident in this specification because it is complicated.
 # Test description: In this two-lane scenario, POV1 moves forward at uneven speed. Initially SV moves forward at even speed. 
 # If it is ever directly behind POV1, it swerves to left , then drives at high speed to overtake POV1, swerves right, then drives normally
 # z0 is SV, z1 is POV
