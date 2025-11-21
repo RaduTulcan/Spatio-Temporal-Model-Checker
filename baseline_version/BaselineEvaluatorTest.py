@@ -74,34 +74,51 @@ def safe_intersection_priority(test_index: int, grid_size: int):
                    ["G(~(@z0 z1))"], (grid_size, grid_size), 3, False)
 
 #TODO: Rose is not entirely confident in this specification because it is complicated.
-# Test description: In this two-lane scenario, POV1 moves forward at uneven speed. Initially SV moves forward at even speed. If it is ever directly behind POV1, it swerves to either 
-# side, then drives at high speed to overtake POV1, swerves in either direction when safe, then drives normally
-# Limitations: When the vehicle swerves, it does not move forward. When it drives fast, it teleports over the middle space.
+# Test description: In this two-lane scenario, POV1 moves forward at uneven speed. Initially SV moves forward at even speed. 
+# If it is ever directly behind POV1, it swerves to left , then drives at high speed to overtake POV1, swerves right, then drives normally
+# z0 is SV, z1 is POV
+#
+# The five steps are
+# 1 move forward initially
+# 2 swerve left
+# 3 drive forward fast
+# 4 swerve right
+# 5 go forward at normal speed
+# The duration of each step is
+# Step 1: >=0 timesteps
+# Step 2: 1 timestep
+# Step 3: >0 timesteps
+# Step 4: 1 timestep
+# Step 5: all remaining timesteps.
+# Note the pattern  P & X (P Until Q) is used to ensure Step 3 runs for at least one timestep
+#
 # Usefulness: Stress-tests the Until operator. "Non-trivial example". Helps demonstrate the value of optimizing one vehicle when the other clearly cannot be optimized 
 # (though we have other tests which demonstrate that same point)
 def safe_passing(test_index: int, road_length: int):
-    #z0 initially moves forward
-    first_forward = "(@z0 ↓z2 X @z0  (Back z2))"
-    #then dodges left or right to avoid z1
-    dodge_left = "(@z0 ↓z2 ((Front z1) & X (@z0 (Right z2))))"
-     # then drives twice as fast
-    fast_forward = "(@z0 ↓z2 X @z0  (Back (Back z2)))"
+    # z0 initially moves forward
+    first_forward = "(@z0 ↓z2 X @z0 (Back z2))"
+    # then swerves left to avoid z1
+    dodge_left    = "(@z0 ↓z2 ((Front z1) & X (@z0 (Back (Right z2)))))"
+    # then drives twice as fast
+    fast_forward  = "(@z0 ↓z2 X @z0 (Back (Back z2)))"
     # then dodges back when safe
-    dodge_right = "(@z0 ↓z2 ((!(Left z1)|(Right z1)) & X (@z0 (Left z2))))"
+    dodge_right   = "(@z0 ↓z2 X @z0 (Back (Left z2)))"
     # then drives normally
-    last_forward = "(@z0 ↓z2 X @z0  (Back z2))"
+    last_forward  = "(@z0 ↓z2 X @z0 (Back z2))"
     run_evaluator(test_index, [], ['z0', 'z1'], 
                   ["@z1 !(Right 1)", # POV starts anywhere in right land
                    "@z0 !(Right 1)", # SV starts in back of right lane
                    "@z0 !(Back 1)",
                    "G (@z1 ↓z2 X @z1  (z2 | Back z2))", #z1 moves forward or stays in place
-                   "G ({} U ({} U ({} U ( {} U  {}))))".format(first_forward,dodge_left,fast_forward,dodge_right,last_forward)], 
+                   "({} U ({} & X ({} & X ({} U ({} & X G ({}))))))".format(first_forward,dodge_left,fast_forward,fast_forward,dodge_right,last_forward)], 
                    ["G(~(@z0 z1))"], (2, road_length), 3, False)
     
 # Test description: In this test, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. It can join the platoon by switching lanes
 # if the resulting position is both behind a car of the platoon and is safe.
 # Usefulness: Most other tests only scale the road while keeping the number of vehicles and the formulas the same. This test scales the number of vehicles and the size of the formulas,
 # which allows us to evaluate a different aspect of scalability compared to the other test cases.
+# Subtle note: We allow multiple cars in the platoon to have the same position as each other. We choose to see this as a feature instead of a bug, because it's equivalent
+# to testing all platoons of size *up to N* instead of size *exactly N*, e.g., if all cars in a 5-car platoon are in the same position, it functions as a 1-car platoon. 
 def join_platoon(test_index: int, platoon_size: int, road_length: int):
     pov_noms = ["z"+str(i+1) for i in range(platoon_size)]
     noms = ["z0"] + pov_noms  # and z is a temporary
