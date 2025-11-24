@@ -21,7 +21,8 @@ def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, 
     """
 
     # generate all points found in the bounding box
-    points: list[tuple[int, int]] = [(i, j) for i in range(size_of_bounding_box[0]) for j in range(size_of_bounding_box[1])]
+    points: list[tuple[int, int]] = [(i, j) for i in range(size_of_bounding_box[0]) for j in
+                                     range(size_of_bounding_box[1])]
 
     # generate all possible placements for each proposition
     prop_placements: list[list] = [list(powerset(points)) for _ in propositions]
@@ -60,7 +61,9 @@ def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, 
                 allowed_grids.append(placement)
     return allowed_grids
 
-def generate_traces(propositions: list[str], nominals: list[str], max_trace_length: int, grid_size: tuple[int, int], parsed_state_assumptions) -> list[list[list[list]]]:
+
+def generate_traces(propositions: list[str], nominals: list[str], max_trace_length: int, grid_size: tuple[int, int],
+                    parsed_state_assumptions) -> list[list[list[list]]]:
     """
     Generates all traces up to a given length based on the given grid structure.
 
@@ -75,13 +78,6 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
     grids: list[dict] = generate_all_satisfying_grids(grid_size, propositions, nominals, parsed_state_assumptions)
 
     print("|Total amount of grids generated:", len(grids))
-
-    nr_traces: int = 0
-
-    for i in range(1, max_trace_length + 1):
-        nr_traces += len(grids)**i
-
-    print("|Total amount of traces to check:", nr_traces)
 
     # generate all traces with the available grids and up to the given length
     for length in range(1, max_trace_length + 1):
@@ -107,7 +103,10 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     return points
 
-def satisfying_trace_points(propositions: list[str], nominals: list[str], formula: HybridSpatioTemporalFormula, parsed_state_assumptions, grid_size: tuple[int, int], max_trace_length: int, show_traces: bool):
+
+def satisfying_trace_points(propositions: list[str], nominals: list[str], formula: HybridSpatioTemporalFormula,
+                            parsed_state_assumptions, grid_size: tuple[int, int], max_trace_length: int,
+                            show_traces: bool):
     """
     Prints the number of traces and, if parameter show_traces, also the traces where spatial points have
     been found in which the given formula holds.
@@ -120,8 +119,8 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
     :param show_traces: whether the satisfying traces should be shown in the console
     """
 
-    counter = 0
-
+    counter_sat = 0
+    counter_gen = 0
     # evaluate the input formula on all the generated traces over the given propositions
     # and nominals, and with maximal length max_trace_length
     for t in generate_traces(propositions, nominals, max_trace_length, grid_size, parsed_state_assumptions):
@@ -129,12 +128,36 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
 
         if sat_points:
             if show_traces:
-                print("\t |Satisfying trace #", counter, " with satisfying points: ", sat_points)
+                print("\t |Satisfying trace #", counter_sat, " with satisfying points: ", sat_points)
                 print("\t |--------------------------------------------------------------------")
                 print("\t |", t, "\n")
-            counter = counter + 1
+            counter_sat = counter_sat + 1
+        counter_gen = counter_gen + 1
 
-    print("|A total of ", counter, " satisfying traces found.")
+    print("|A total of ", counter_gen, "traces generated.")
+    print("|A total of ", counter_sat, " satisfying traces found.")
+
+
+def evaluate(propositions, nominals, assumptions, conclusions, grid_size):
+    # filter global formula with propositional/hybrid or other global arguments
+    state_assumptions = []
+
+    for a in assumptions:
+        if "X" not in a and "U" not in a and "F" not in a and tokenize(a)[0][1] == 'G':
+            state_assumptions.append(a)
+
+    parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in
+                                state_assumptions]
+
+    # conjunction of assumptions and conclusion
+    input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions),
+                                          *("(" + x + ")" for x in set(assumptions).difference(state_assumptions))])
+
+    # parse the input formula
+    parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
+
+    # compute the satisfying trace-point pairs
+    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, 2, False)
 
 
 if __name__ == '__main__':
@@ -143,14 +166,14 @@ if __name__ == '__main__':
     propositions = []
 
     # list of nominals
-    nominals = ["z", "z2", "z3"]
+    nominals = ["z", "z1", "z2"]
 
     # list of assumptions (restrict the traces and points of interest)
-    assumptions: list[str] = []
+    assumptions: list[str] = ["@z1 (↓z (G (@z1 (z))))", "G (@z2 ↓z X @z2 (Front z))"]
 
     # list of conclusions (formulas to be checked at all traces and spatial
     # points in which the assumptions hold)
-    conclusions: list[str] = ["@z  ↓z2 ((@z3  ↓z2 z3) & @z2 z)"]
+    conclusions: list[str] = ["↓z1 F(z1 & z2)"]
 
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
@@ -162,24 +185,9 @@ if __name__ == '__main__':
     print("EVALUATION WITH RESPECT TO GRID SIZE")
     print("------------------------------------------------")
 
-    # only allow assumptions that are either purely classical and hybrid, and contains only operator G with argument
-    # a purely classical or hybrid formula
-    state_assumptions = []
+    evaluate(propositions, nominals, assumptions, conclusions, grid_size)
 
-    for a in assumptions:
-        if "X" not in a and "U" not in a and "F" not in a:
-            state_assumptions.append(a)
 
-    parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in state_assumptions]
-
-    # conjunction of assumptions and conclusion
-    input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in set(assumptions).difference(state_assumptions))])
-
-    # parse the input formula
-    parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
-
-    # compute the satisfying trace-point pairs
-    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, 2, False)
 
 
 
