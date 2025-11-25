@@ -573,7 +573,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     return points
 
-def satisfying_trace_points(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int], max_trace_length: int,
+def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int], max_trace_length: int,
                             show_traces: bool):
 
     static_cars, dependent_cars, fixed_movement_cars = divide_cars_in_types(assumptions, nominals)
@@ -618,7 +618,7 @@ if __name__ == '__main__':
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
 
-    satisfying_trace_points(propositions, nominals, assumptions, conclusions, grid_size,2, True)
+    evaluate(propositions, nominals, assumptions, conclusions, grid_size,2, True)
 
 
 

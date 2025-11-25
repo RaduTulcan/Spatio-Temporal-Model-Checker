@@ -44,4 +44,4 @@ class Bind(UnaryFormula):
         for i in range(0, len(copy_grid)):
             copy_grid[i][self.name] = point
 
-        return self.operand.evaluate(grid, point)
+        return self.operand.evaluate(copy_grid, point)

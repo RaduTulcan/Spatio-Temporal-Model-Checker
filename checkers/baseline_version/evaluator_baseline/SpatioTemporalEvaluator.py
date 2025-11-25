@@ -139,6 +139,15 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
 
     print("|A total of ", counter, " satisfying traces found.")
 
+def evaluate(propositions, nominals, assumptions, conclusions, grid_size, max_trace_length, show_traces):
+
+    # conjunction of assumptions and conclusion
+    input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
+
+    # parse the input formula
+    parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
+
+    satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, max_trace_length, show_traces)
 
 if __name__ == '__main__':
 

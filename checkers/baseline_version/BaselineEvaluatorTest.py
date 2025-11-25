@@ -1,5 +1,5 @@
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import satisfying_trace_points
+from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import evaluate
 from timeit import default_timer as timer
 # Rose apologizes to imperative programmers OTL
 from functools import reduce
@@ -37,7 +37,7 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
 
     # evaluate formula and return traces and points where the formula holds
     start: float = timer()
-    satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, trace_max_length, show_traces)
+    evaluate(propositions, nominals, parsed_formula, grid_size, trace_max_length, show_traces)
     end: float = timer()
 
     print("|Time elapsed:", end - start, "\n")
