@@ -1,6 +1,7 @@
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from itertools import chain, combinations, product
+
+from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
 
 def powerset(iterable: iter) -> iter:

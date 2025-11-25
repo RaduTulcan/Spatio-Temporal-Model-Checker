@@ -1,5 +1,5 @@
-from BinaryFormula import BinaryFormula
-from UnaryFormula import UnaryFormula
+from formula_types.UnaryFormula import UnaryFormula
+from formula_types.BinaryFormula import BinaryFormula
 
 
 class Next(UnaryFormula):
@@ -34,7 +34,7 @@ class Always(UnaryFormula):
         Class for temporal always operator.
     """
 
-    def evaluate(self, trace: list[list[list[list]]], point: tuple[int, int]) -> bool:
+    def evaluate(self, trace, point):
         for i in range(0, len(trace)):
 
             if not self.operand.evaluate(trace[i:], point):
@@ -47,7 +47,7 @@ class Until(BinaryFormula):
     """
         Class for temporal until operator.
     """
-    def evaluate(self, trace: list[list[list[list]]], point: tuple[int, int]) -> bool:
+    def evaluate(self, trace, point):
         for i in range(0, len(trace)):
             eval_right = self.right.evaluate(trace[i:], point)
             if eval_right:

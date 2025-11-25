@@ -48,8 +48,8 @@ On the other hand, you can run the model checker with your own formulas. Conside
 ### 1) Evaluate a formula with respect to a given trace and spatial point (baseline version only)
 
 ```python
-from baseline_version.evaluator_baseline.SpatioTemporalEvaluator import generate_trace_from_spec
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import generate_trace_from_spec
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 
 # list of propositions
@@ -79,9 +79,9 @@ grid_size: tuple[int, int] = (3, 3)
 #  ["b;"  ";"]                            ["b" ""]            [""  ""]
 # ]                                     ]                   ]
 trace_spec: list[list[str]] = [
-    [";;", "z,b;z;a,z", ";;"],
-    [";;", ";a;b", ";;"],
-    [";;", "a;b;", "b;;"]
+ [";;", "z,b;z;a,z", ";;"],
+ [";;", ";a;b", ";;"],
+ [";;", "a;b;", "b;;"]
 ]
 
 # transform the input grid format into a trace
@@ -97,14 +97,16 @@ input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("
 parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
 # retrieve result
-print("The formula ", parsed_formula, " evaluates to ", parsed_formula.evaluate(trace, point), " at point ", point, "\n")
+print("The formula ", parsed_formula, " evaluates to ", parsed_formula.evaluate(trace, point), " at point ", point,
+      "\n")
 ```
 
 ### 2) Evaluate formula with respect to a trace and retrieve the spatial points where the given formula holds (baseline only)
 
 ```python
-from baseline_version.evaluator_baseline.SpatioTemporalEvaluator import generate_trace_from_spec, satisfying_points
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import generate_trace_from_spec,
+ satisfying_points
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 
 # list of propositions
@@ -134,9 +136,9 @@ grid_size: tuple[int, int] = (3, 3)
 #  ["b;"  ";"]                            ["b" ""]            [""  ""]
 # ]                                     ]                   ]
 trace_spec: list[list[str]] = [
-    [";;", "z,b;z;a,z", ";;"],
-    [";;", ";a;b", ";;"],
-    [";;", "a;b;", "b;;"]
+ [";;", "z,b;z;a,z", ";;"],
+ [";;", ";a;b", ";;"],
+ [";;", "a;b;", "b;;"]
 ]
 
 # transform the input grid format into a trace
@@ -149,13 +151,15 @@ input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("
 parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
 # retrieve result
-print("The formula ", parsed_formula, " is true at the following spatial points w.r.t. the given trace:", satisfying_points(parsed_formula, trace, grid_size), '\n')
+print("The formula ", parsed_formula, " is true at the following spatial points w.r.t. the given trace:",
+      satisfying_points(parsed_formula, trace, grid_size), '\n')
 ```
 
 ### 3) Retrieve traces and the spatial points inside the trace in which the given formula holds (baseline)
+
 ```python
-from baseline_version.evaluator_baseline.SpatioTemporalEvaluator import satisfying_trace_points
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import satisfying_trace_points
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 
 # list of propositions
@@ -186,9 +190,9 @@ satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, 2, Fa
 ### 4) Retrieve traces and the spatial points inside the trace in which the given formula holds (optimize)
 
 ```python
-from optimized_version.evaluator_optimized.Radu_SpatioTemporalEvaluator import satisfying_trace_points
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
+from checkers.optimized_version.evaluator_optimized.SpatioTemporalEvaluator1 import satisfying_trace_points
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers import tokenize, HybridSpatioTemporalParser
 
 # list of propositions
 propositions = []
@@ -211,13 +215,15 @@ grid_size: tuple[int, int] = (3, 3)
 state_assumptions = []
 
 for a in assumptions:
-    if "X" not in a and "U" not in a and "F" not in a:
-        state_assumptions.append(a)
+ if "X" not in a and "U" not in a and "F" not in a:
+  state_assumptions.append(a)
 
-parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in state_assumptions]
+parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in
+                            state_assumptions]
 
 # conjunction of assumptions and conclusion
-input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in set(assumptions).difference(state_assumptions))])
+input_formula_string: str = "&".join(
+ [*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in set(assumptions).difference(state_assumptions))])
 
 # parse the input formula
 parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()

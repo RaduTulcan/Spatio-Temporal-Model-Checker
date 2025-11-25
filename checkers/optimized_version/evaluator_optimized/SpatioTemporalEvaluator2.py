@@ -1,15 +1,8 @@
-# TODO
-# 1) scan over all formulas and select the important ones [DONE]
-# 2) parse all the formulas as usual []
-# 3) extract car position information about the formulas of interest [DONE]
-# 4) generate grids according to the positional information (type (2) formulas) []\
-#   - check if different cars can be placed at different positions
-# 5) generate traces according to positional information []
 import re
 from itertools import chain, combinations, product
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
 DIRECTIONS = {
     "Left": (0, -1),

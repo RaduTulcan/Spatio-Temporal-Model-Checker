@@ -1,7 +1,7 @@
 import copy
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from formula_types.UnaryFormula import UnaryFormula
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from UnaryFormula import UnaryFormula
 
 class Nom(HybridSpatioTemporalFormula):
     """

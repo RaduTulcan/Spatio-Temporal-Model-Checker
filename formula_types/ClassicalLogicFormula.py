@@ -1,6 +1,6 @@
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from UnaryFormula import UnaryFormula
-from BinaryFormula import BinaryFormula
+from formula_types.BinaryFormula import BinaryFormula
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from formula_types.UnaryFormula import UnaryFormula
 
 
 class Verum(HybridSpatioTemporalFormula):
