@@ -1,6 +1,7 @@
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from itertools import chain, combinations, product
+
+from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
 
 def powerset(iterable: iter) -> iter:
@@ -138,7 +139,7 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
     print("|A total of ", counter_sat, " satisfying traces found.")
 
 
-def evaluate(propositions, nominals, assumptions, conclusions, grid_size):
+def evaluate(propositions, nominals, assumptions, conclusions, grid_size, max_trace_length, show_traces):
     # filter global formula with propositional/hybrid or other global arguments
     state_assumptions = []
 
@@ -157,7 +158,7 @@ def evaluate(propositions, nominals, assumptions, conclusions, grid_size):
     parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
     # compute the satisfying trace-point pairs
-    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, 2, False)
+    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, max_trace_length, show_traces)
 
 
 if __name__ == '__main__':

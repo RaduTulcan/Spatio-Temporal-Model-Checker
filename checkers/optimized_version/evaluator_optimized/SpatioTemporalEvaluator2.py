@@ -1,15 +1,8 @@
-# TODO
-# 1) scan over all formulas and select the important ones [DONE]
-# 2) parse all the formulas as usual []
-# 3) extract car position information about the formulas of interest [DONE]
-# 4) generate grids according to the positional information (type (2) formulas) []\
-#   - check if different cars can be placed at different positions
-# 5) generate traces according to positional information []
 import re
 from itertools import chain, combinations, product
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
 DIRECTIONS = {
     "Left": (0, -1),
@@ -580,7 +573,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     return points
 
-def satisfying_trace_points(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int], max_trace_length: int,
+def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int], max_trace_length: int,
                             show_traces: bool):
 
     static_cars, dependent_cars, fixed_movement_cars = divide_cars_in_types(assumptions, nominals)
@@ -625,7 +618,7 @@ if __name__ == '__main__':
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
 
-    satisfying_trace_points(propositions, nominals, assumptions, conclusions, grid_size,2, True)
+    evaluate(propositions, nominals, assumptions, conclusions, grid_size,2, True)
 
 
 

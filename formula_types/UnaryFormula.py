@@ -1,4 +1,4 @@
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 
 
 class UnaryFormula(HybridSpatioTemporalFormula):

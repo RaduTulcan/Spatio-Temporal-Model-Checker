@@ -1,8 +1,6 @@
 from itertools import chain, combinations, product
-from math import comb
-import HybridSpatioTemporalFormula
-from baseline_version.parsers_baseline.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
-import copy
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 
 
 def powerset(iterable: iter) -> iter:
@@ -16,7 +14,7 @@ def powerset(iterable: iter) -> iter:
     return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
-def generate_trace_from_spec(trace_spec: list[list[str]], grid_size: tuple[int, int]) -> list[list[list[list]]]:
+def generate_trace_from_spec(trace_spec: list[list[str]], grid_size: tuple[int, int]) -> list[dict]:
     """
     Generates the trace data structure from the given trace model.
 
@@ -27,7 +25,7 @@ def generate_trace_from_spec(trace_spec: list[list[str]], grid_size: tuple[int, 
 
     empty_grid: list[list[list]] = [[[] for _ in range(0, grid_size[1])] for _ in range(0, grid_size[0])]
     trace_length: int = len(trace_spec[0][0].split(";"))
-    trace: list[list[list[list]]] = [copy.deepcopy(empty_grid) for _ in range(0, trace_length)]
+    trace: list[dict] = [{} for _ in range(0, trace_length)]
 
     # fills the empty trace according to the trace specification
     for i in range(0, grid_size[0]):
@@ -35,14 +33,13 @@ def generate_trace_from_spec(trace_spec: list[list[str]], grid_size: tuple[int, 
             point_time_evolution: list = trace_spec[i][j].split(";")
 
             for k in range(0, trace_length):
-                if point_time_evolution[k] == "":
-                    trace[k][i][j] = []
-                else:
-                    trace[k][i][j] = point_time_evolution[k].split(",")
+                for s in point_time_evolution[k].split(","):
+                    if s != "":
+                        trace[k][s] = (i,j)
     return trace
 
 
-def generate_traces(propositions: list[str], nominals: list[str], max_trace_length: int, grid_size: tuple[int, int]) -> list[list[list[list]]]:
+def generate_traces(propositions: list[str], nominals: list[str], max_trace_length: int, grid_size: tuple[int, int]) -> list[dict]:
     """
     Generates all traces up to a given length based on the given grid structure.
 
@@ -62,22 +59,20 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
     # generate all possible placements for each nominal
     nominal_placements: list[list[tuple[int, int]]] = [points for _ in nominals]
 
-    empty_grid: list[list[list]] = [[[] for _ in range(0, grid_size[1])] for _ in range(0, grid_size[0])]
-    grids: list[list[list[list]]] = []
+    grids: list = []
 
     # iterate over all possible placements of atomic components
     for prop_choice in product(*prop_placements):
         for nominal_choice in product(*nominal_placements):
-            placement: list[list[list]] = copy.deepcopy(empty_grid)
+            placement: dict = {}
 
             # Add propositions with their chosen subsets
             for name, subset in zip(propositions, prop_choice):
-                for s in subset:
-                    placement[s[0]][s[1]].append(name)
+                placement[name] = subset
 
             # Add nominals with their single chosen point
             for name, pos in zip(nominals, nominal_choice):
-                placement[pos[0]][pos[1]].append(name)
+                placement[name] = pos
 
             grids.append(placement)
 
@@ -96,7 +91,7 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
             yield list(tup)
 
 
-def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[list[list]]], grid_size: tuple[int, int]):
+def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[dict], grid_size: tuple[int, int]):
     """
     Returns the spatial points in the grid where the given formula is true with respect to the given trace.
 
@@ -144,6 +139,15 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
 
     print("|A total of ", counter, " satisfying traces found.")
 
+def evaluate(propositions, nominals, assumptions, conclusions, grid_size, max_trace_length, show_traces):
+
+    # conjunction of assumptions and conclusion
+    input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
+
+    # parse the input formula
+    parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
+
+    satisfying_trace_points(propositions, nominals, parsed_formula, grid_size, max_trace_length, show_traces)
 
 if __name__ == '__main__':
 
@@ -158,7 +162,7 @@ if __name__ == '__main__':
 
     # list of conclusions (formulas to be checked at all traces and spatial
     # points in which the assumptions hold)
-    conclusions: list[str] = ["@z  :z2 ((@z3  ↓z2 z3) & @z2 z)"]
+    conclusions: list[str] = ["@z  ↓z2 ((@z3  ↓z2 z3) & @z2 z)"]
 
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
@@ -174,13 +178,13 @@ if __name__ == '__main__':
     #  ["b;"  ";"]                            ["b" ""]            [""  ""]
     # ]                                     ]                   ]
     trace_spec: list[list[str]] = [
-        [";;", "z,b;z;a,z", ";;"],
-        [";;", ";a;b", ";;"],
-        [";;", "a;b;", "b;;"]
+        [";;", "z;z;z2,z", ";;"],
+        [";;", ";z2;", ";;"],
+        [";;", "z3,z2;;", ";;"]
     ]
 
     # transform the input grid format into a trace
-    trace: list[list[list[list]]] = generate_trace_from_spec(trace_spec, grid_size)
+    trace: list[dict] = generate_trace_from_spec(trace_spec, grid_size)
 
     # -------------------------------------------------------------------------
     # 1. EVALUATE FORMULA FOR GIVEN POINT AND TRACE

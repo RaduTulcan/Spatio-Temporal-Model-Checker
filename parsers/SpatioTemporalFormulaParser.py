@@ -1,15 +1,11 @@
 import re
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from baseline_version.formula_types_baseline.HybridFormula import Nom, At, Bind
-from baseline_version.parsers_baseline.SpatioTemporalFormulaParser import SPATIOTEMPORAL_TOKEN_REGEX, \
-    SpatioTemporalParser
-from baseline_version.formula_types_baseline.ClassicalLogicFormula import Verum, Falsum, Prop, Not
-from baseline_version.formula_types_baseline.SpatialFormula import Front, Back, Left, Right
-from baseline_version.formula_types_baseline.TemporalFormula import Next, Eventually, Always
 
-NOM = "NOM"
-AT = "AT"
-BIND = "BIND"
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers.SpatialFormulaParser import SPATIAL_TOKEN_REGEX, SpatialParser
+from formula_types.ClassicalLogicFormula import Verum, Falsum, Prop, Not, And
+from formula_types.SpatialFormula import Front, Back, Left, Right
+from formula_types.TemporalFormula import Next, Eventually, Always, Until
+
 NEXT = "NEXT"
 EVENTUALLY = "EVENTUALLY"
 ALWAYS = "ALWAYS"
@@ -19,6 +15,10 @@ AND = "AND"
 TOP = "TOP"
 BOT = "BOT"
 NOT = "NOT"
+AND = "AND"
+OR = "OR"
+IMPLIES = "IMPLIES"
+IFF = "IFF"
 FRONT = "FRONT"
 BACK = "BACK"
 LEFT = "LEFT"
@@ -26,16 +26,17 @@ RIGHT = "RIGHT"
 LPAREN = "LPAREN"
 RPAREN = "RPAREN"
 PROP = "PROP"
+SPACE = "SPACE"
 
-# regex for hybrid syntax
-HYBRID_TOKEN_REGEX: str = r'''
-    | (?P<''' + NOM + '''>z[0-9_]*)
-    | (?P<''' + AT + '''>@z[0-9_]*)
-    | (?P<''' + BIND + '''>[↓:]z[0-9_]*)
-'''
+# regex for temporal syntax
+TEMPORAL_TOKEN_REGEX = r'''
+  | (?P<''' + NEXT + '''>X)
+  | (?P<''' + EVENTUALLY + '''>F)
+  | (?P<''' + ALWAYS + '''>G)
+  | (?P<''' + UNTIL + '''>U)'''
 
-# regex for hybrid spatio-temporal formulas
-HYBRID_SPATIOTEMPORAL_TOKEN_REGEX: str = "".join([SPATIOTEMPORAL_TOKEN_REGEX, HYBRID_TOKEN_REGEX])
+# regex for spatio-temporal formulas
+SPATIOTEMPORAL_TOKEN_REGEX = "".join([SPATIAL_TOKEN_REGEX, TEMPORAL_TOKEN_REGEX])
 
 
 def tokenize(formula: str) -> list[tuple[str, str]]:
@@ -45,7 +46,7 @@ def tokenize(formula: str) -> list[tuple[str, str]]:
     :return: a list of tokens/syntactic constructs the formula string is made up of
     """
     tokens: list[tuple[str, str]] = []
-    for match in re.finditer(HYBRID_SPATIOTEMPORAL_TOKEN_REGEX, formula, re.VERBOSE):
+    for match in re.finditer(SPATIOTEMPORAL_TOKEN_REGEX, formula, re.VERBOSE):
         kind: str = match.lastgroup
         value: str = match.group()
         if kind != SPACE:
@@ -53,7 +54,32 @@ def tokenize(formula: str) -> list[tuple[str, str]]:
     return tokens
 
 
-class HybridSpatioTemporalParser(SpatioTemporalParser):
+class SpatioTemporalParser(SpatialParser):
+
+    def parse_and(self) -> HybridSpatioTemporalFormula:
+        """
+        Parses formulas that are conjunctions.
+        :return: the parsed conjunction
+        """
+        node: HybridSpatioTemporalFormula = self.parse_until()
+        while self.peek()[0] == AND:
+            self.consume()
+            right: HybridSpatioTemporalFormula = self.parse_until()
+            node = And("∧", node, right)
+        return node
+
+    def parse_until(self) -> HybridSpatioTemporalFormula:
+        """
+        Parses temporal until formulas.
+        :return: the parsed formula
+        """
+        node: HybridSpatioTemporalFormula = self.parse_unary()
+        while self.peek()[0] == UNTIL:
+            self.consume()
+            right: HybridSpatioTemporalFormula = self.parse_unary()
+            node = Until("U", node, right)
+        return node
+
     def parse_unary(self) -> HybridSpatioTemporalFormula:
         """
         Parses unary hybrid spatio-temporal formulas.
@@ -62,7 +88,8 @@ class HybridSpatioTemporalParser(SpatioTemporalParser):
         kind: str
         value: str
         kind, value = self.peek()
-        if kind in (NOT, FRONT, BACK, LEFT, RIGHT, NEXT, EVENTUALLY, ALWAYS, AT, BIND):
+
+        if kind in (NOT, FRONT, BACK, LEFT, RIGHT, NEXT, EVENTUALLY, ALWAYS):
             self.consume()
             operand: HybridSpatioTemporalFormula = self.parse_unary()
 
@@ -82,10 +109,6 @@ class HybridSpatioTemporalParser(SpatioTemporalParser):
                 return Eventually(value, operand)
             elif kind == ALWAYS:
                 return Always(value, operand)
-            elif kind == AT:
-                return At(value[1:], value, operand)
-            elif kind == BIND:
-                return Bind(value[1:], value.replace(":","↓"), operand)
         elif kind == LPAREN:
             self.consume(LPAREN)
             node: HybridSpatioTemporalFormula = self.parse_iff()
@@ -93,8 +116,6 @@ class HybridSpatioTemporalParser(SpatioTemporalParser):
             return node
         elif kind == PROP:
             return Prop(self.consume(PROP)[1])
-        elif kind == NOM:
-            return Nom(self.consume(NOM)[1])
         elif kind == TOP:
             self.consume(TOP)
             return Verum()

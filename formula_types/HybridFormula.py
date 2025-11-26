@@ -1,7 +1,7 @@
 import copy
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from formula_types.UnaryFormula import UnaryFormula
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from UnaryFormula import UnaryFormula
 
 class Nom(HybridSpatioTemporalFormula):
     """
@@ -44,4 +44,4 @@ class Bind(UnaryFormula):
         for i in range(0, len(copy_grid)):
             copy_grid[i][self.name] = point
 
-        return self.operand.evaluate(grid, point)
+        return self.operand.evaluate(copy_grid, point)
