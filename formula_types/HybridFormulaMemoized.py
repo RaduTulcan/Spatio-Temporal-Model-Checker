@@ -1,7 +1,7 @@
 import copy
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula, memoized_evaluate
-from UnaryFormula import UnaryFormula
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula, memoize
+from formula_types.UnaryFormula import UnaryFormula
 
 class Nom(HybridSpatioTemporalFormula):
     """
@@ -13,8 +13,11 @@ class Nom(HybridSpatioTemporalFormula):
     def __repr__(self):
         return self.name
 
-    @memoized_evaluate
-    def evaluate(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+    def evaluate(self, trace, point):
+        return self.evaluate_memoized(trace, 0, point, {})
+
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return point == trace[0][self.name]
 
 
@@ -26,9 +29,12 @@ class At(UnaryFormula):
         super().__init__(op, operand)
         self.name = name
 
-    @memoized_evaluate
-    def evaluate(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
-        return self.operand.evaluate(trace, time, trace[0][self.name], memo)
+    def evaluate(self, trace, point):
+        return self.evaluate_memoized(trace, 0, point, {})
+
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+        return self.operand.evaluate_memoized(trace, time, trace[0][self.name], memo)
 
 
 class Bind(UnaryFormula):
@@ -39,11 +45,14 @@ class Bind(UnaryFormula):
         super().__init__(op, operand)
         self.name = name
 
-    @memoized_evaluate
-    def evaluate(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+    def evaluate(self, trace, point):
+        return self.evaluate_memoized(trace, 0, point, {})
+
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         copy_trace = copy.deepcopy(trace)
 
         for i in range(0, len(copy_trace)):
             copy_trace[i][self.name] = point
 
-        return self.operand.evaluate(copy_trace, time, point, memo)
+        return self.operand.evaluate_memoized(copy_trace, time, point, memo)

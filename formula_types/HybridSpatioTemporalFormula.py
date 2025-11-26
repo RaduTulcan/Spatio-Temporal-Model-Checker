@@ -1,7 +1,7 @@
 class HybridSpatioTemporalFormula:
     pass
 
-def memoized_evaluate(method):
+def memoize(method):
     def wrapper(self, trace, time, point, memo):
         key = (self, time, point)
         if key in memo:
