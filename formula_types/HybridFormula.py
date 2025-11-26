@@ -15,7 +15,7 @@ class Nom(HybridSpatioTemporalFormula):
 
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
-        return point == trace[0][self.name]
+        return point == trace[time][self.name]
 
 
 class At(UnaryFormula):

@@ -34,8 +34,16 @@ def generate_trace_from_spec(trace_spec: list[list[str]], grid_size: tuple[int, 
 
             for k in range(0, trace_length):
                 for s in point_time_evolution[k].split(","):
-                    if s != "":
+                    if s == "":
+                        continue
+
+                    if s.startswith("z"):
                         trace[k][s] = (i,j)
+                    elif "a" <= s[0].lower() <= "y":
+                        if s not in trace[k]:
+                            trace[k][s] = [(i,j)]
+                        else:
+                            trace[k][s].append((i,j))
     return trace
 
 
