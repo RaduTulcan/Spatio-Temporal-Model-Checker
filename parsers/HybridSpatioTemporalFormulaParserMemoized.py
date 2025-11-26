@@ -1,11 +1,11 @@
 import re
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.formula_types_optimized.HybridFormulaMemoized import Nom, At, Bind
-from optimized_version.parsers_optimized.SpatioTemporalFormulaParserMemoized import SPATIOTEMPORAL_TOKEN_REGEX, SpatioTemporalParser
-from optimized_version.formula_types_optimized.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not
-from optimized_version.formula_types_optimized.SpatialFormulaMemoized import Front, Back, Left, Right
-from optimized_version.formula_types_optimized.TemporalFormulaMemoized import Next, Eventually, Always
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from formula_types.HybridFormulaMemoized import Nom, At, Bind
+from parsers.SpatioTemporalFormulaParserMemoized import SPATIOTEMPORAL_TOKEN_REGEX, SpatioTemporalParser
+from formula_types.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not
+from formula_types.SpatialFormulaMemoized import Front, Back, Left, Right
+from formula_types.TemporalFormulaMemoized import Next, Eventually, Always
 
 
 NOM = "NOM"

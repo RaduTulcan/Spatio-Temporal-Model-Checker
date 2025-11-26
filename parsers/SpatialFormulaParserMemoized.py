@@ -1,6 +1,6 @@
 import re
-from optimized_version.formula_types_optimized.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not, And, Or, If, Iff
-from optimized_version.formula_types_optimized.SpatialFormulaMemoized import Front, Back, Left, Right
+from formula_types.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not, And, Or, If, Iff
+from formula_types.SpatialFormulaMemoized import Front, Back, Left, Right
 
 TOP = "TOP"
 BOT = "BOT"

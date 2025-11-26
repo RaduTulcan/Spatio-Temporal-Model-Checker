@@ -1,10 +1,10 @@
 import re
 
-from HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from optimized_version.parsers_optimized.SpatialFormulaParserMemoized import SPATIAL_TOKEN_REGEX, SpatialParser
-from optimized_version.formula_types_optimized.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not, And
-from optimized_version.formula_types_optimized.SpatialFormulaMemoized import Front, Back, Left, Right
-from optimized_version.formula_types_optimized.TemporalFormulaMemoized import Next, Eventually, Always, Until
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
+from parsers.SpatialFormulaParserMemoized import SPATIAL_TOKEN_REGEX, SpatialParser
+from formula_types.ClassicalLogicFormulaMemoized import Verum, Falsum, Prop, Not, And
+from formula_types.SpatialFormulaMemoized import Front, Back, Left, Right
+from formula_types.TemporalFormulaMemoized import Next, Eventually, Always, Until
 
 NEXT = "NEXT"
 EVENTUALLY = "EVENTUALLY"
