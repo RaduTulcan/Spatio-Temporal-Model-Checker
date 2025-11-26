@@ -13,9 +13,6 @@ class Nom(HybridSpatioTemporalFormula):
     def __repr__(self):
         return self.name
 
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return point == trace[0][self.name]
@@ -29,9 +26,6 @@ class At(UnaryFormula):
         super().__init__(op, operand)
         self.name = name
 
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return self.operand.evaluate_memoized(trace, time, trace[0][self.name], memo)
@@ -44,9 +38,6 @@ class Bind(UnaryFormula):
     def __init__(self, name, op, operand):
         super().__init__(op, operand)
         self.name = name
-
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
 
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):

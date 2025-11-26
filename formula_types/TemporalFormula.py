@@ -7,10 +7,6 @@ class Next(UnaryFormula):
     """
         Class for temporal next operator.
     """
-
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         if time+1 >= len(trace):
@@ -23,10 +19,6 @@ class Eventually(UnaryFormula):
     """
         Class for temporal eventually operator.
     """
-
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         if time == len(trace) - 1:
@@ -40,10 +32,6 @@ class Always(UnaryFormula):
     """
         Class for temporal always operator.
     """
-
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         if time == len(trace) - 1:
@@ -56,12 +44,7 @@ class Until(BinaryFormula):
     """
         Class for temporal until operator.
     """
-
-    def evaluate(self, trace, point):
-        return self.evaluate_memoized(trace, 0, point, {})
-
-
-    # recursive version (faster, but hits recursion limit for long traces)
+    # recursive version (faster, but hits recursion limit for very long traces)
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         if self.right.evaluate_memoized(trace, time, point, memo):
