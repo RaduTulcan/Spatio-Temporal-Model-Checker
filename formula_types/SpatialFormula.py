@@ -6,6 +6,14 @@ class Front(UnaryFormula):
     """
        Class for spatial front operator.
     """
+    def evaluate(self, trace, point, grid_size):
+        """
+            Evaluates the formula on the given trace at the specified point starting from time 0.
+        """
+        if 0 <= point[0] - 1 < grid_size[0] and 0 <= point[1] < grid_size[1]:
+            return self.evaluate_memoized(trace, 0, point, {})
+        else: return False
+
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return self.operand.evaluate_memoized(trace, time, (point[0] - 1, point[1]), memo)
@@ -15,6 +23,14 @@ class Back(UnaryFormula):
     """
         Class for spatial back operator.
     """
+    def evaluate(self, trace, point, grid_size):
+        """
+            Evaluates the formula on the given trace at the specified point starting from time 0.
+        """
+        if 0 <= point[0] + 1 < grid_size[0] and 0 <= point[1] < grid_size[1]:
+            return self.evaluate_memoized(trace, 0, point, {})
+        else: return False
+
     @memoize
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return self.operand.evaluate_memoized(trace, time, (point[0] + 1, point[1]), memo)
@@ -24,6 +40,14 @@ class Left(UnaryFormula):
     """
         Class for spatial left operator.
     """
+    def evaluate(self, trace, point, grid_size):
+        """
+            Evaluates the formula on the given trace at the specified point starting from time 0.
+        """
+        if 0 <= point[0]  < grid_size[0] and 0 <= point[1] - 1 < grid_size[1]:
+            return self.evaluate_memoized(trace, 0, point, {})
+        else: return False
+
     def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return self.operand.evaluate_memoized(trace, time, (point[0], point[1] - 1), memo)
 
@@ -32,5 +56,13 @@ class Right(UnaryFormula):
     """
         Class for spatial right operator.
     """
+    def evaluate(self, trace, point, grid_size):
+        """
+            Evaluates the formula on the given trace at the specified point starting from time 0.
+        """
+        if 0 <= point[0]  < grid_size[0] and 0 <= point[1] + 1 < grid_size[1]:
+            return self.evaluate_memoized(trace, 0, point, {})
+        else: return False
+
     def evaluate_memoized(self, trace,time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return self.operand.evaluate_memoized(trace, time, (point[0], point[1] + 1), memo)

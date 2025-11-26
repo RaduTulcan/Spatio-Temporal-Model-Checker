@@ -11,6 +11,8 @@ class TestHybridFormula(unittest.TestCase):
         self.point3 = (1, 0)
         self.point4 = (1, 1)
 
+        self.grid_size = (2,2)
+
         self.grid = [{
             'z1': self.point1,
             'z2': self.point2
@@ -20,25 +22,25 @@ class TestHybridFormula(unittest.TestCase):
         self.z2 = Nom("z2")
 
     def test_nominal_evaluate(self):
-        self.assertTrue(self.z1.evaluate(self.grid, self.point1))
-        self.assertFalse(self.z2.evaluate(self.grid, self.point3))
+        self.assertTrue(self.z1.evaluate(self.grid, self.point1, self.grid_size))
+        self.assertFalse(self.z2.evaluate(self.grid, self.point3, self.grid_size))
 
     def test_nominal_evaluate_out_of_bounds(self):
-        self.assertFalse(self.z1.evaluate(self.grid, (-1, -1)))
+        self.assertFalse(self.z1.evaluate(self.grid, (-1, -1), self.grid_size))
 
     def test_at_evaluate(self):
         at_z1_z2 = At("z1", "AT", self.z2)
         at_z1_not_z2 = At("z1", "AT", Not("NOT", self.z2))
 
         for pt in [self.point1, self.point2, self.point3, self.point4]:
-            self.assertFalse(at_z1_z2.evaluate(self.grid, pt))
-            self.assertTrue(at_z1_not_z2.evaluate(self.grid, pt))
+            self.assertFalse(at_z1_z2.evaluate(self.grid, pt, self.grid_size))
+            self.assertTrue(at_z1_not_z2.evaluate(self.grid, pt, self.grid_size))
 
     def test_bind_evaluate(self):
         bind_z1_z1_and_z2 = Bind("z1", ":z1", And("AND", self.z1, self.z2))
 
-        self.assertTrue(bind_z1_z1_and_z2.evaluate(self.grid, self.point2))
-        self.assertFalse(bind_z1_z1_and_z2.evaluate(self.grid, self.point3))
+        self.assertTrue(bind_z1_z1_and_z2.evaluate(self.grid, self.point2, self.grid_size))
+        self.assertFalse(bind_z1_z1_and_z2.evaluate(self.grid, self.point3, self.grid_size))
 
     def test_evaluate_validities(self):
         at_z1_z1 = At("z1", "AT", self.z1)
@@ -49,10 +51,10 @@ class TestHybridFormula(unittest.TestCase):
                                                                  At("z1", "AT", And("AND", self.z1, self.z2))))
 
         for pt in [self.point1, self.point2, self.point3, self.point4]:
-            self.assertTrue(at_z1_z1.evaluate(self.grid, pt))
-            self.assertTrue(at_z1_z2_implies_at_z2_z1.evaluate(self.grid, pt))
-            self.assertTrue(bind_z1_z1.evaluate(self.grid, pt))
-            self.assertTrue(bind_z1_z1_and_z2_iff_bind_z1_at_z1_z1_and_z2.evaluate(self.grid, pt))
+            self.assertTrue(at_z1_z1.evaluate(self.grid, pt, self.grid_size))
+            self.assertTrue(at_z1_z2_implies_at_z2_z1.evaluate(self.grid, pt, self.grid_size))
+            self.assertTrue(bind_z1_z1.evaluate(self.grid, pt, self.grid_size))
+            self.assertTrue(bind_z1_z1_and_z2_iff_bind_z1_at_z1_z1_and_z2.evaluate(self.grid, pt, self.grid_size))
 
 
 if __name__ == '__main__':

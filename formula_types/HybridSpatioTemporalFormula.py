@@ -1,5 +1,5 @@
 class HybridSpatioTemporalFormula:
-    def evaluate(self, trace, point):
+    def evaluate(self, trace, point, grid_size):
         """
             Evaluates the formula on the given trace at the specified point starting from time 0.
         """

@@ -568,7 +568,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     for i in range(0, grid_size[0]):
         for j in range(0, grid_size[1]):
-            if formula.evaluate(trace, (i, j)):
+            if formula.evaluate(trace, (i, j), grid_size):
                 points.append((i, j))
 
     return points

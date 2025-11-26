@@ -50,7 +50,7 @@ def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, 
             assumptions_hold: bool = True
             for assumption in assumptions:
                 for p in points:
-                    if not assumption.evaluate([placement], p):
+                    if not assumption.evaluate([placement], p, grid_size):
                         assumptions_hold = False
                         break
 
@@ -99,7 +99,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     for i in range(0, grid_size[0]):
         for j in range(0, grid_size[1]):
-            if formula.evaluate(trace, (i, j)):
+            if formula.evaluate(trace, (i, j), grid_size):
                 points.append((i, j))
 
     return points

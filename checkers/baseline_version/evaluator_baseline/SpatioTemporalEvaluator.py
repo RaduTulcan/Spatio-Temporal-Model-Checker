@@ -104,7 +104,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[dict], g
 
     for i in range(0, grid_size[0]):
         for j in range(0, grid_size[1]):
-            if formula.evaluate(trace, (i, j)):
+            if formula.evaluate(trace, (i, j), grid_size):
                 points.append((i, j))
 
     return points
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     # evaluate formula w.r.t. trace and point
     print("EVALUATION WITH RESPECT TO GIVEN TRACE AND POINT")
     print("------------------------------------------------")
-    print("The formula ", parsed_formula, " evaluates to ", parsed_formula.evaluate(trace, point), " at point ", point, "\n")
+    print("The formula ", parsed_formula, " evaluates to ", parsed_formula.evaluate(trace, point, grid_size), " at point ", point, "\n")
 
     # ---------------------------------------------------------------------------
     # 2. RETRIEVE POINTS FROM THE GRID WHERE THE FORMULA HOLDS FOR A GIVEN TRACE
