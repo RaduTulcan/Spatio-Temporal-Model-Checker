@@ -1,7 +1,7 @@
 import copy
-from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from formula_types.UnaryFormula import UnaryFormula
 
+from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula, memoize
+from formula_types.UnaryFormula import UnaryFormula
 
 class Nom(HybridSpatioTemporalFormula):
     """
@@ -13,8 +13,9 @@ class Nom(HybridSpatioTemporalFormula):
     def __repr__(self):
         return self.name
 
-    def evaluate(self, grid, point):
-        return point == grid[0][self.name]
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+        return point == trace[0][self.name]
 
 
 class At(UnaryFormula):
@@ -25,9 +26,9 @@ class At(UnaryFormula):
         super().__init__(op, operand)
         self.name = name
 
-
-    def evaluate(self, grid, point):
-        return self.operand.evaluate(grid, grid[0][self.name])
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+        return self.operand.evaluate_memoized(trace, time, trace[0][self.name], memo)
 
 
 class Bind(UnaryFormula):
@@ -38,10 +39,11 @@ class Bind(UnaryFormula):
         super().__init__(op, operand)
         self.name = name
 
-    def evaluate(self, grid, point):
-        copy_grid = copy.deepcopy(grid)
+    @memoize
+    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+        new_trace = copy.deepcopy(trace)
 
-        for i in range(0, len(copy_grid)):
-            copy_grid[i][self.name] = point
+        for i in range(0, len(new_trace)):
+            new_trace[i][self.name] = point
 
-        return self.operand.evaluate(copy_grid, point)
+        return self.operand.evaluate_memoized(new_trace, time, point, memo)
