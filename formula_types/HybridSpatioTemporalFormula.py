@@ -14,7 +14,7 @@ def memoize(method):
         Caches results based on the formula instance, time, and spatial point.
     """
     def wrapper(self, trace, time, point, grid_size, memo):
-        key = (self, time, point, grid_size)
+        key = (self, time)
         if key in memo:
             return memo[key]
         result = method(self, trace, time, point, grid_size, memo)
