@@ -1,242 +1,9 @@
-import re
-from itertools import chain, combinations, product
-
+from itertools import product
+from checkers.optimized_version.OptimizedEvaluatorUtils import parse_static_car, parse_fixed_offset, \
+    parse_fixed_movement, powerset
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
-from formula_types.HybridFormula import Nom, At, Bind
-from formula_types.ClassicalLogicFormula import Verum, Falsum, Prop, Not, And, Or
-from formula_types.SpatialFormula import Front, Back, Left, Right
 
-
-DIRECTIONS = {
-    "Left": (0, 1),
-    "Right": (0, -1),
-    "Front": (1, 0),
-    "Back": (-1, 0),
-    "Stay": (0, 0),
-}
-
-
-def get_tokens(formula: str):
-    spaced = formula.replace("(", " ( ").replace(")", " ) ")
-    return [t for t in spaced.split() if t]
-
-
-def strip_parentheses(tokens):
-    return [t for t in tokens if t not in ("(", ")")]
-
-
-def parse_static_car(formula: str):
-    tokens = strip_parentheses(get_tokens(formula))
-
-    # formula has exactly 5 tokens (without parentheses)
-    if len(tokens) != 5:
-        return None
-
-    # binder syntax must match
-    if not re.fullmatch(r"↓z[0-9_]*", tokens[1]):
-        return None
-
-    # at syntax must match
-    if not re.fullmatch(r"@z[0-9_]*", tokens[0]):
-        return None
-
-    # globally operator must exist
-    if tokens[2] != "G":
-        return None
-
-    # binder nominal must match the last token
-    if tokens[1][1:] != tokens[4]:
-        return None
-
-    # both @-occurrences must match
-    if tokens[0] != tokens[3]:
-        return None
-
-    return tokens[0][1:]
-
-
-def dirs_to_offset(dirs):
-    x = y = 0
-    for d in dirs:
-        dx, dy = DIRECTIONS[d]
-        x += dx
-        y += dy
-    return x, y
-
-
-def parse_fixed_offset(formula: str):
-    tokens = strip_parentheses(get_tokens(formula))
-
-    if tokens[0] != "G":
-        return None, None, None
-
-    if not re.fullmatch(r"@z[0-9_]*", tokens[1]):
-        return None, None, None
-
-    if not re.fullmatch(r"z[0-9_]*", tokens[-1]):
-        return None, None, None
-
-    directions = tokens[2:-1]
-
-    # check that all other tokens are only directions
-    if len(directions) == 0:
-        return None, None, None
-
-    for d in directions:
-        if d != "Left" and d != "Right" and d != "Back" and d != "Front":
-            return None, None, None
-
-    reference_car = tokens[1][1:]
-    dependent_car = tokens[-1]
-    offset = dirs_to_offset(directions)
-    return reference_car, dependent_car, offset
-
-
-#If fml is a (nested) disjunction, return the list of disjuncts
-def branches_of(fml):
-    if isinstance(fml, Or):
-        return branches_of(fml.left) + branches_of(fml.right)
-    else:
-        return [fml]
-    
-#If fml is a (nested) disjunction, return the first disjunct.
-def debranch(fml):
-    return branches_of(fml)[0]
-
-# Returns whether fml is an end-checking formula (! X 1)
-def is_end_check(fml):
-    if not isinstance(fml, Not):
-        return False
-    next = fml.operand
-    if next.op != "X":
-        return False
-    return isinstance(next.operand, Verum)
-
-# remove disjunct (! X 1)
-def strip_end_check(fml):
-    if fml.op != "∨":
-        return fml
-    branches = branches_of(fml)
-    clean_branches = [x for x in branches if not is_end_check(x)]
-    if len(clean_branches) != 1:
-        return None
-    return clean_branches[0]
-
-# Unpack the syntactic pattern used in movement specs:  G @ ↓ X @
-def get_movement_pattern(fml):
-    if fml.op != "G":
-        return None
-    at_outer = fml.operand
-    if at_outer.op[0] != "@":
-        return None
-    arrow = at_outer.operand
-    if arrow.op[0] != "↓":
-        return None
-    next = strip_end_check(arrow.operand)
-    if next == None or next.op != "X":
-        return None
-    at_inner = next.operand
-    if at_inner.op[0] != "@":
-        return None
-    if at_outer.op != at_inner.op:
-        return None
-    vehicle = at_outer.name
-    tmp_var = arrow.name
-    inner_branches = branches_of(at_inner.operand)
-    return (vehicle, tmp_var, inner_branches)
-
-def is_left_of(fml, tmp_var): return isinstance(fml, Left) and fml.operand.name == tmp_var
-def is_right_of(fml, tmp_var): return isinstance(fml, Right) and fml.operand.name == tmp_var
-def is_front_of(fml, tmp_var): return isinstance(fml, Front) and fml.operand.name == tmp_var
-def is_back_of(fml, tmp_var): return isinstance(fml, Back) and fml.operand.name == tmp_var
-def is_stay_of(fml, tmp_var): return isinstance(fml, Nom) and fml.name == tmp_var
-
-def branches_to_directions(inner_branches, tmp_var):
-    lefts = [x for x in inner_branches if is_left_of(x, tmp_var)]
-    rights = [x for x in inner_branches if is_right_of(x, tmp_var)]
-    fronts = [x for x in inner_branches if is_front_of(x, tmp_var)]
-    backs = [x for x in inner_branches if is_back_of(x, tmp_var)]
-    stays = [x for x in inner_branches if is_stay_of(x, tmp_var)]
-    stops = [x for x in inner_branches if is_end_check(x)]
-    extras = [x for x in inner_branches if not x in (lefts + rights + fronts + backs + stays + stops)]
-    if len(extras) > 0:
-        return None
-    directions = []
-    if (len(lefts) > 0): directions = directions + ["Left"]
-    if (len(rights) > 0): directions = directions + ["Right"]
-    if (len(fronts) > 0): directions = directions + ["Front"]
-    if (len(backs) > 0): directions = directions + ["Back"]
-    if (len(stays) > 0): directions = directions + ["Stay"]
-    return directions
-    
-
-def parse_fixed_movement(fml_str, formula):
-    
-    #branches = [b.strip() for b in formula.split("|")]
-    #first_branch = branches[0]
-    #tokens_first = get_tokens(first_branch)
-
-    # formula must start with globally operator
-    #if tokens_first[0] != "G":
-    #    return None, None
-
-    # followed by at-operator and a nominal
-    #if not re.fullmatch(r"@z[0-9_]*", tokens_first[1]):
-    #    return None, None
-
-    # followed by a binding operator
-    #if not re.fullmatch(r"↓z[0-9_]*", tokens_first[2]):
-    #    return None, None
-
-    # followed by next operator
-    #if tokens_first[3] != "X":
-    #    return None, None
-
-    # the nominals for at-operator must match
-    #if tokens_first[1] != tokens_first[4]:
-    #    return None, None
-
-    # "free" nominals used after the binding operator must match the nominial of the operator
-    #if tokens_first[-1] != tokens_first[2][1:]:
-     #   return None, None
-    pat = get_movement_pattern(debranch(formula))
-    if pat == None:
-        return None, None
-    (car, tmp_var, inner_branches) = pat
-    directions = branches_to_directions(inner_branches, tmp_var)
-    if directions == None:
-        return None, None
-    #car   = tokens_first[1][1:]
-    #directions = tokens_first[5:-1]
-
-    # check that all other tokens are only directions
-    #if len(directions) == 0:
-    #    return None, None
-
-    #for d in directions:
-        #if d != "Left" and d != "Right" and d != "Back" and d != "Front":
-            #return None, None
-
-    offsets=[]
-    offsets.append(dirs_to_offset(directions))
-    return car, offsets
-
-    #for b in branches[1:]:
-        #tok = get_tokens(b)
-        #directions = tok[:-1]
-
-        # "free" nominals used after the binding operator must match the nominial of the operator
-        #if tok[-1] != tokens_first[2][1:]:
-            #return None, None
-
-#        for d in directions:
-            #if d != "Left" and d != "Right" and d != "Back" and d != "Front":
-                #return None, None
-
-#        offsets.append(dirs_to_offset(directions))
-
- 
 
 def divide_cars_in_types(assumptions, nominals):
     static_cars = []
@@ -275,12 +42,6 @@ def divide_cars_in_types(assumptions, nominals):
     # independent_cars = set(nominals).difference(set(static_cars).union(set(dependent_car_names)).union(set(fixed_movement_car_names)))
 
     return static_cars, dependent_cars, fixed_movement_cars
-
-
-def powerset(iterable):
-    """Return all subsets of iterable as tuples."""
-    s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
 def build_adjacency(dependencies):
@@ -351,7 +112,6 @@ def placements_for_component(rel_pos, grid_x, grid_y):
 
 
 def generate_grids(grid_size, propositions, nominals, components):
-
     constrained_cars = set()
     for comp in components:
         constrained_cars.update(comp.keys())
@@ -421,6 +181,9 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
     # dependent components in the dependency graph with relative positions
     components = compute_components(adj)
 
+    if components is None:
+        return []
+
     dep_cars = [x for xs in components for x in xs.keys()]
 
     independent_cars = set(nominals) - set(static_cars) - set(dep_cars) - set(fixed_movement_cars)
@@ -438,7 +201,8 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
 
             # if a component has a static car, no dependent car can have a fixed movement
             for c in components:
-                if len(set(static_cars) & set(c.keys())) != 0 and len(set(c.keys()) & set(fixed_movement_cars.keys())) != 0:
+                if len(set(static_cars) & set(c.keys())) != 0 and len(
+                        set(c.keys()) & set(fixed_movement_cars.keys())) != 0:
                     yield []
                     return
 
@@ -457,53 +221,20 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
                         yield []
                         return
 
-            yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars, independent_cars, 1, trace_length, grid, [grid])
+            yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components,
+                                    fixed_movement_cars, independent_cars, 1, trace_length, grid, [grid])
+
 
 def check_in_bound(grid_size, point):
     return 0 <= point[0] < grid_size[0] and 0 <= point[1] < grid_size[1]
+
+
 def add(p, d):
-        return (p[0] + d[0], p[1] + d[1])
+    return (p[0] + d[0], p[1] + d[1])
 
-def equal_tuples(n, values):
-    """
-    Lazily yield n-tuples where all components are equal.
-    Nothing is stored except the current (v,)*n.
-    """
-    for v in values:
-        return (v,) * n
 
-def column_groups(list_of_lists):
-    """
-    Given something like:
-        [[a0, a1],
-         [b0, b1],
-         [c0, c1]]
-    return:
-        [[a0, b0, c0],   # column 0
-         [a1, b1, c1]]   # column 1
-    Missing entries (shorter sublists) are skipped for that column.
-    """
-    if not list_of_lists:
-        return []
-
-    max_len = max(len(sub) for sub in list_of_lists)
-    cols = []
-    for idx in range(max_len):
-        col = [sub[idx] for sub in list_of_lists if idx < len(sub)]
-        cols.append(col)
-    return cols
-
-def index_cartesian(arr):
-    """
-    For two list-of-lists, build all combinations of their index-based columns.
-    """
-    cols1 = column_groups(arr[0])
-    cols2 = column_groups(arr[1])
-    # Cartesian product of column groups
-    return [(c1, c2) for c1, c2 in product(cols1, cols2)]
-
-def combine_placements(grid_size, curr_grid, static_car_names, components, fixed_movement_car_names, independent_car_names, moves, propositions):
-
+def combine_placements(grid_size, curr_grid, static_car_names, components, fixed_movement_car_names,
+                       independent_car_names, moves, propositions):
     # this is ok
     static_car_moves = []
     for c in static_car_names:
@@ -535,7 +266,6 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
     for j in range(0, len(components)):
         members = list(components[j].keys())
 
-
         for mov in moves[members[0]]:
             all_in_grid = True
             pos = []
@@ -558,8 +288,6 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
             for inner in p:
                 flat.extend(inner)
             dependent_components_choices.append(flat)
-
-
 
     for static_car_choice in static_car_placements:
         for fixed_car_choice in fixed_car_placements:
@@ -586,8 +314,8 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
                         yield placement
 
 
-def extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars, independent_cars, curr_trace_length, max_trace_length, prev_grid, trace):
-
+def extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
+                 independent_cars, curr_trace_length, max_trace_length, prev_grid, trace):
     if curr_trace_length <= max_trace_length:
         yield trace
         if curr_trace_length == max_trace_length:
@@ -597,7 +325,7 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
 
     # static cars are placed in the same position in the next time instance
     for s in static_cars:
-        moves[s] = [(0,0)]
+        moves[s] = [(0, 0)]
 
     # all possible movements within grid bounds
     all_deltas = [
@@ -612,7 +340,7 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
         # checked that no dependent components have static and fixed movement cars)
         if len(set(static_cars) & set(c.keys())) > 0:
             for d in c.keys():
-                moves[d] = [(0,0)]
+                moves[d] = [(0, 0)]
 
         else:
             # get common fixed movements for cars in component
@@ -622,7 +350,7 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
             if len(fixed_movement_cars_in_c) > 0:
                 allowed_moves = fixed_movement_cars[fixed_movement_cars_in_c[0]]
 
-                for i in range (1, len(fixed_movement_cars_in_c)):
+                for i in range(1, len(fixed_movement_cars_in_c)):
                     allowed_moves = set(allowed_moves).intersection(set(fixed_movement_cars_in_c[i]))
 
                 for car in c.keys():
@@ -643,8 +371,12 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
         moves[c] = all_deltas
 
     # combine placements
-    for placement in combine_placements(grid_size, prev_grid, static_cars, components, fixed_movement_cars.keys(), independent_cars,moves, propositions):
-        yield from extend_trace(grid_size, propositions,  static_cars, dependent_cars, components, fixed_movement_cars, independent_cars, curr_trace_length + 1, max_trace_length, placement, trace + [placement])
+    for placement in combine_placements(grid_size, prev_grid, static_cars, components, fixed_movement_cars.keys(),
+                                        independent_cars, moves, propositions):
+        yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
+                                independent_cars, curr_trace_length + 1, max_trace_length, placement,
+                                trace + [placement])
+
 
 def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[list[list]]], grid_size: tuple[int, int]):
     """
@@ -664,9 +396,10 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
     return points
 
-def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int], max_trace_length: int,
-                            show_traces: bool):
 
+def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int],
+             max_trace_length: int,
+             show_traces: bool):
     static_cars, dependent_cars, fixed_movement_cars = divide_cars_in_types(assumptions, nominals)
 
     # conjunction of assumptions and conclusion
@@ -678,7 +411,8 @@ def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusi
 
     counter_sat = 0
     counter_gen = 0
-    for t in generate_traces(grid_size, propositions, nominals, static_cars, dependent_cars, fixed_movement_cars, max_trace_length):
+    for t in generate_traces(grid_size, propositions, nominals, static_cars, dependent_cars, fixed_movement_cars,
+                             max_trace_length):
         sat_points = satisfying_points(parsed_formula, t, grid_size)
 
         if sat_points:
@@ -709,7 +443,4 @@ if __name__ == '__main__':
     # size of the spatial grid graph (n x m)
     grid_size: tuple[int, int] = (3, 3)
 
-    evaluate(propositions, nominals, assumptions, conclusions, grid_size,2, True)
-
-
-
+    evaluate(propositions, nominals, assumptions, conclusions, grid_size, 2, True)
