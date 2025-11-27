@@ -14,7 +14,7 @@ class Nom(HybridSpatioTemporalFormula):
         return self.name
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         return point == trace[time][self.name]
 
 
@@ -27,8 +27,8 @@ class At(UnaryFormula):
         self.name = name
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
-        return self.operand.evaluate_memoized(trace, time, trace[0][self.name], memo)
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+        return self.operand.evaluate_memoized(trace, time, trace[time][self.name], grid_size, memo)
 
 
 class Bind(UnaryFormula):
@@ -40,10 +40,10 @@ class Bind(UnaryFormula):
         self.name = name
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[tuple, int, tuple[int, int]], bool]):
         new_trace = copy.deepcopy(trace)
 
         for i in range(0, len(new_trace)):
             new_trace[i][self.name] = point
 
-        return self.operand.evaluate_memoized(new_trace, time, point, memo)
+        return self.operand.evaluate_memoized(new_trace, time, point, grid_size, memo)

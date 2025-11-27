@@ -11,7 +11,7 @@ class Verum(HybridSpatioTemporalFormula):
         return "⊤"
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
         return True
 
 
@@ -23,7 +23,7 @@ class Falsum(HybridSpatioTemporalFormula):
         return "⊥"
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
         return False
 
 
@@ -38,7 +38,7 @@ class Prop(HybridSpatioTemporalFormula):
         return self.name
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
         return point in trace[time][self.name]
 
 
@@ -52,8 +52,8 @@ class Not(UnaryFormula):
     """
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
-        return not self.operand.evaluate_memoized(trace, time, point, memo)
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+        return not self.operand.evaluate_memoized(trace, time, point, grid_size, memo)
 
 
 # --------------------------------------------------------------------------
@@ -69,8 +69,8 @@ class And(BinaryFormula):
         return f"({self.left} {self.op} {self.right})"
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
-        return self.left.evaluate_memoized(trace, time, point, memo) and self.right.evaluate_memoized(trace, time, point, memo)
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+        return self.left.evaluate_memoized(trace, time, point, grid_size, memo) and self.right.evaluate_memoized(trace, time, point, grid_size, memo)
 
 
 class If(BinaryFormula):
@@ -81,8 +81,8 @@ class If(BinaryFormula):
         return f"({self.left} {self.op} {self.right})"
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
-        return (not self.left.evaluate_memoized(trace, time, point, memo)) or self.right.evaluate_memoized(trace, time, point, memo)
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+        return (not self.left.evaluate_memoized(trace, time, point, grid_size, memo)) or self.right.evaluate_memoized(trace, time, point, grid_size, memo)
 
 
 class Iff(BinaryFormula):
@@ -93,9 +93,9 @@ class Iff(BinaryFormula):
         return f"({self.left} {self.op} {self.right})"
 
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
-        return ((not self.left.evaluate_memoized(trace, time, point, memo)) or self.right.evaluate_memoized(trace, time, point, memo)) and (
-                (not self.right.evaluate_memoized(trace, time, point, memo)) or self.left.evaluate_memoized(trace, time, point, memo))
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+        return ((not self.left.evaluate_memoized(trace, time, point, grid_size, memo)) or self.right.evaluate_memoized(trace, time, point, grid_size, memo)) and (
+                (not self.right.evaluate_memoized(trace, time, point, grid_size, memo)) or self.left.evaluate_memoized(trace, time, point, grid_size, memo))
 
 
 class Or(BinaryFormula):
@@ -106,6 +106,6 @@ class Or(BinaryFormula):
         return f"({self.left} {self.op} {self.right})"
     
     @memoize
-    def evaluate_memoized(self, trace, time, point, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
-        return self.left.evaluate_memoized(trace, time, point, memo) or self.right.evaluate_memoized(trace, time, point, memo)
+    def evaluate_memoized(self, trace, time, point, grid_size, memo : dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]):
+        return self.left.evaluate_memoized(trace, time, point, grid_size, memo) or self.right.evaluate_memoized(trace, time, point, grid_size, memo)
 
