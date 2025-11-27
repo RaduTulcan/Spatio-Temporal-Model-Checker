@@ -9,10 +9,10 @@ from formula_types.SpatialFormula import Front, Back, Left, Right
 
 
 DIRECTIONS = {
-    "Left": (0, -1),
-    "Right": (0, 1),
-    "Front": (-1, 0),
-    "Back": (1, 0),
+    "Left": (0, 1),
+    "Right": (0, -1),
+    "Front": (1, 0),
+    "Back": (-1, 0),
     "Stay": (0, 0),
 }
 
@@ -214,9 +214,9 @@ def parse_fixed_movement(fml_str, formula):
     #if len(directions) == 0:
     #    return None, None
 
-    for d in directions:
-        if d != "Left" and d != "Right" and d != "Back" and d != "Front":
-            return None, None
+    #for d in directions:
+        #if d != "Left" and d != "Right" and d != "Back" and d != "Front":
+            #return None, None
 
     offsets=[]
     offsets.append(dirs_to_offset(directions))
