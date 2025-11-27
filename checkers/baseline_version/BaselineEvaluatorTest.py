@@ -1,5 +1,8 @@
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import evaluate
+#from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import evaluate
+from checkers.optimized_version.evaluator_optimized.SpatioTemporalEvaluator1 import evaluate
+#from checkers.optimized_version.evaluator_optimized.SpatioTemporalEvaluator2 import evaluate
+
 from timeit import default_timer as timer
 # Rose apologizes to imperative programmers OTL
 from functools import reduce
@@ -43,7 +46,7 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
     print("|Time elapsed:", end - start, "\n")
 
 def front_back_test(test_index: int):
-    run_evaluator(test_index, [], ['z'], [], ["G(Front(Back(z)) <-> Back(Front(z)))"], (3,3), 3, False)
+    run_evaluator(test_index, [], ['z'], [], ["G(Left(Right(z)) <-> Right(Left(z)))"], (3,3), 3, False)
 
 def same_name_test(test_index: int):
     run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False)
@@ -103,7 +106,7 @@ def safe_passing(test_index: int, road_length: int):
     # then drives normally
     last_forward  = "(@z0 ↓z2 ((! X 1) | X @z0 (Back z2)))"
     run_evaluator(test_index, [], ['z0', 'z1'], 
-                  ["@z1 !(Right 1)", # POV starts anywhere in right land
+                  ["G(@z1 !(Right 1))", # POV starts anywhere in right lane, stays in right lane
                    "@z0 !(Right 1)", # SV starts in back of right lane
                    "@z0 !(Back 1)",
                    "G (@z1 ↓z2 ((! X 1) | X @z1  (z2 | Back z2)))", #z1 moves forward or stays in place
@@ -124,7 +127,7 @@ def join_platoon(test_index: int, platoon_size: int, road_length: int):
     some_front = reduce((lambda x, acc: x + "|" + acc), each_front)
     sv_mov_assump = "G(@z0 ↓z ((! X 1) | (X @z0((Back z)|(({0})&(Right z)&({1}))))))".format(some_front, no_collide)
     sv_start_assump = "@z0 !(Right 1)"
-    pov_start_assumps = [format("@z{0} !(Left 1)".format(str(i+1))) for i in range(platoon_size)]
+    pov_start_assumps = [format("G(@z{0} !(Left 1))".format(str(i+1))) for i in range(platoon_size)]
     pov_mov_assumps = [format("G(@z{0} ↓z ((! X 1) | X (@z{0} (Back z))))".format(str(i+1))) for i in range(platoon_size)]
     assumps = [sv_start_assump, sv_mov_assump] + pov_mov_assumps + pov_start_assumps
     postcond = "G(@z0 ({}))".format(no_collide)
@@ -143,4 +146,3 @@ if __name__ == '__main__':
     safe_passing(5, 4)
     #Test 6
     join_platoon(6, 2, 2)
-    
