@@ -15,7 +15,7 @@ def powerset(iterable: iter) -> iter:
     return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
-def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, assumptions):
+def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, state_fmls, grid_size):
     """
         This function generate all possible starting states in the grid.
         (Since any position can be a starting point for any car, it generates all possible placements)
@@ -47,24 +47,26 @@ def generate_all_satisfying_grids(size_of_bounding_box, propositions, nominals, 
                 placement[name] = pos
 
             # check whether in the generated state, the assumptions hold
-            assumptions_hold: bool = True
-            for assumption in assumptions:
+            fmls_hold: bool = True
+            for fml in state_fmls:
                 for p in points:
-                    if not assumption.evaluate([placement], p, grid_size):
-                        assumptions_hold = False
+                    if not fml.evaluate([placement], p, grid_size):
+                        fmls_hold = False
                         break
 
-                if not assumptions_hold:
+                if not fmls_hold:
                     break
 
             # consider these states, only if the assumption holds
-            if assumptions_hold:
+            if fmls_hold:
                 allowed_grids.append(placement)
+            else:
+                pass
     return allowed_grids
 
 
 def generate_traces(propositions: list[str], nominals: list[str], max_trace_length: int, grid_size: tuple[int, int],
-                    parsed_state_assumptions) -> list[list[list[list]]]:
+                    parsed_state_fmls) -> list[list[list[list]]]:
     """
     Generates all traces up to a given length based on the given grid structure.
 
@@ -76,7 +78,7 @@ def generate_traces(propositions: list[str], nominals: list[str], max_trace_leng
     """
 
     # consider only grids that satisfy state assumptions
-    grids: list[dict] = generate_all_satisfying_grids(grid_size, propositions, nominals, parsed_state_assumptions)
+    grids: list[dict] = generate_all_satisfying_grids(grid_size, propositions, nominals, parsed_state_fmls, grid_size)
 
     print("|Total amount of grids generated:", len(grids))
 
@@ -106,7 +108,7 @@ def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[lis
 
 
 def satisfying_trace_points(propositions: list[str], nominals: list[str], formula: HybridSpatioTemporalFormula,
-                            parsed_state_assumptions, grid_size: tuple[int, int], max_trace_length: int,
+                            parsed_state_fmls, grid_size: tuple[int, int], max_trace_length: int,
                             show_traces: bool):
     """
     Prints the number of traces and, if parameter show_traces, also the traces where spatial points have
@@ -124,7 +126,7 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
     counter_gen = 0
     # evaluate the input formula on all the generated traces over the given propositions
     # and nominals, and with maximal length max_trace_length
-    for t in generate_traces(propositions, nominals, max_trace_length, grid_size, parsed_state_assumptions):
+    for t in generate_traces(propositions, nominals, max_trace_length, grid_size, parsed_state_fmls):
         sat_points = satisfying_points(formula, t, grid_size)
 
         if sat_points:
@@ -141,24 +143,24 @@ def satisfying_trace_points(propositions: list[str], nominals: list[str], formul
 
 def evaluate(propositions, nominals, assumptions, conclusions, grid_size, max_trace_length, show_traces):
     # filter global formula with propositional/hybrid or other global arguments
-    state_assumptions = []
+    state_fmls = []
 
-    for a in assumptions:
+    for a in assumptions + conclusions:
         if "X" not in a and "U" not in a and "F" not in a and tokenize(a)[0][1] == 'G':
-            state_assumptions.append(a)
+            state_fmls.append(a)
 
-    parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in
-                                state_assumptions]
+    parsed_state_fmls = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for assumption in
+                                state_fmls]
 
     # conjunction of assumptions and conclusion
     input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions),
-                                          *("(" + x + ")" for x in set(assumptions).difference(state_assumptions))])
+                                          *("(" + x + ")" for x in set(assumptions).difference(state_fmls))])
 
     # parse the input formula
     parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
     # compute the satisfying trace-point pairs
-    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_assumptions, grid_size, max_trace_length, show_traces)
+    satisfying_trace_points(propositions, nominals, parsed_formula, parsed_state_fmls, grid_size, max_trace_length, show_traces)
 
 
 if __name__ == '__main__':
@@ -186,7 +188,7 @@ if __name__ == '__main__':
     print("EVALUATION WITH RESPECT TO GRID SIZE")
     print("------------------------------------------------")
 
-    evaluate(propositions, nominals, assumptions, conclusions, grid_size)
+    evaluate(propositions, nominals, assumptions, conclusions, grid_size, 3, False)
 
 
 
