@@ -30,7 +30,7 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
     :param trace_max_length: the maximal length of traces to consider
     :param show_traces: whether the (trace, point) tuples should be displayed in the console
     """
-    TIMEOUT = 5    
+    TIMEOUT = 600
 
     # conjunction of assumptions and conclusion
     input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
@@ -148,11 +148,23 @@ if __name__ == '__main__':
     front_back_test(1)
     # Test 2
     same_name_test(2)
-    #Test 3
-    one_lane_follow_test(3, 3, 5)
+    # Test 3
+    one_lane_follow_test(3, 3, 3)
+    one_lane_follow_test(4, 3, 6)
+    one_lane_follow_test(5, 3, 9)
+    one_lane_follow_test(6, 3, 12)
     #Test 4
-    safe_intersection_priority(4, 3, 3)
+    safe_intersection_priority(7, 3, 3)
+    safe_intersection_priority(8, 4, 4)
+    safe_intersection_priority(9, 5, 5)
+    safe_intersection_priority(10, 6, 6)
     #Test 5
-    safe_passing(5, 3, 4)
+    safe_passing(11, 3, 5)
+    safe_passing(12, 6, 5)
+    safe_passing(13, 9, 5)
+    safe_passing(14, 12, 5)
     #Test 6
-    join_platoon(6, 3, 2, 2)
+    join_platoon(15, 3, 2, 6)
+    join_platoon(16, 3, 3, 6)
+    join_platoon(17, 3, 4, 6)
+    join_platoon(18, 3, 5, 6)
