@@ -189,7 +189,6 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
     independent_cars = set(nominals) - set(static_cars) - set(dep_cars) - set(fixed_movement_cars)
 
     for grid in generate_grids(grid_size, propositions, nominals, components):
-
         if trace_length == 1:
             yield [grid]
         else:
@@ -249,7 +248,6 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
         allowed_moves = [add(curr_grid[c], m) for m in moves[c] if check_in_bound(grid_size, add(curr_grid[c], m))]
         fixed_car_moves.append(allowed_moves)
     fixed_car_placements = product(*fixed_car_moves)
-
     # this is OK
     independent_car_moves = []
     for c in independent_car_names:
@@ -289,9 +287,9 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
                 flat.extend(inner)
             dependent_components_choices.append(flat)
 
-    for static_car_choice in static_car_placements:
-        for fixed_car_choice in fixed_car_placements:
-            for independent_car_choice in independent_car_placements:
+    for static_car_choice in product(*static_car_moves): #static_car_placements:
+        for fixed_car_choice in product(*fixed_car_moves): #fixed_car_placements:
+            for independent_car_choice in product(*independent_car_moves): #independent_car_placements:
                 for dependent_component_choice in dependent_components_choices:
                     for prop_choice in product(*prop_placements):
                         placement = {}
@@ -310,8 +308,7 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
 
                         for name, pl_choice in zip(dep_cars, dependent_component_choice):
                             placement[name] = pl_choice
-
-                        yield placement
+                        yield placement    
 
 
 def extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
