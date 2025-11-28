@@ -56,6 +56,13 @@ def dirs_to_offset(dirs):
         y += dy
     return x, y
 
+# apologies for similar name. Above function is used in a different branch of the code
+# which I wish not to disturb
+def dirs_to_offsets(dirs):
+    offsets = []
+    for d in dirs:
+        offsets.append(DIRECTIONS[d])
+    return offsets
 
 
 def parse_fixed_offset(formula: str):
@@ -224,8 +231,7 @@ def parse_fixed_movement(fml_str, formula):
     # if d != "Left" and d != "Right" and d != "Back" and d != "Front":
     # return None, None
 
-    offsets = []
-    offsets.append(dirs_to_offset(directions))
+    offsets = dirs_to_offsets(directions)
     return car, offsets
 
     # for b in branches[1:]:
