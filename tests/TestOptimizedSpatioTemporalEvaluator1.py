@@ -1,5 +1,5 @@
 import unittest
-from checkers.optimized_version.evaluator_optimized.SpatioTemporalEvaluator1 import satisfying_points, generate_traces, \
+from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator1 import satisfying_points, generate_traces, \
     generate_all_satisfying_grids
 from formula_types.ClassicalLogicFormula import And, Not
 from formula_types.HybridFormula import Nom, Bind, At

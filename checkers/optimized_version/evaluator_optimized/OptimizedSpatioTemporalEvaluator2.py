@@ -1,6 +1,8 @@
 from itertools import product
+
+from checkers.SpatioTemporalEvaluatorUtils import satisfying_points, powerset
 from checkers.optimized_version.OptimizedEvaluatorUtils import parse_static_car, parse_fixed_offset, \
-    parse_fixed_movement, powerset
+    parse_fixed_movement
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
@@ -375,25 +377,6 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
                                 trace + [placement])
 
 
-def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[list[list[list]]], grid_size: tuple[int, int]):
-    """
-    Returns the spatial points in the grid where the given formula is true with respect to the given trace.
-
-    :param formula: the formula to evaluate
-    :param trace: the trace to evaluate the given formula on
-    :param grid_size: the size of the spatial grids the trace has been defined on
-    :return: the set of spatial points in the grid where the formula holds given the trace
-    """
-    points: list[tuple[int, int]] = []
-
-    for i in range(0, grid_size[0]):
-        for j in range(0, grid_size[1]):
-            if formula.evaluate(trace, (i, j), grid_size):
-                points.append((i, j))
-
-    return points
-
-
 def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int],
              max_trace_length: int,
              show_traces: bool):
@@ -423,21 +406,3 @@ def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusi
     print("|A total of ", counter_sat, " satisfying traces found.")
 
 
-if __name__ == '__main__':
-    # list of propositions
-    propositions = []
-
-    # list of nominals
-    nominals = ["z", "z1", "z2"]
-
-    # list of assumptions (restrict the traces and points of interest)
-    assumptions: list[str] = ["@z1 (↓z (G (@z1 (z))))", "G (@z2 ↓z X @z2 (Front z))"]
-
-    # list of conclusions (formulas to be checked at all traces and spatial
-    # points in which the assumptions hold)
-    conclusions: list[str] = ["↓z1 F(z1 & z2)"]
-
-    # size of the spatial grid graph (n x m)
-    grid_size: tuple[int, int] = (3, 3)
-
-    evaluate(propositions, nominals, assumptions, conclusions, grid_size, 2, True)

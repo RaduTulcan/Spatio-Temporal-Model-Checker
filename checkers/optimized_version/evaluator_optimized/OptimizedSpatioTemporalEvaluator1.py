@@ -1,4 +1,4 @@
-from checkers.optimized_version.OptimizedEvaluatorUtils import powerset
+from checkers.SpatioTemporalEvaluatorUtils import satisfying_points, powerset
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from itertools import product
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
@@ -81,25 +81,6 @@ def generate_traces(props: list[str], noms: list[str], grid_size: tuple[int, int
     for length in range(1, max_trace_length + 1):
         for tup in product(grids, repeat=length):
             yield list(tup)
-
-
-def satisfying_points(formula: HybridSpatioTemporalFormula, trace: list[dict], grid_size: tuple[int, int]) -> list[tuple[int, int]]:
-    """
-    Returns the spatial points in the grid where the given formula is true with respect to the given trace.
-
-    :param formula: the formula to evaluate
-    :param trace: the trace to evaluate the given formula on
-    :param grid_size: the size of the spatial grids the trace has been defined on
-    :return: the set of spatial points in the grid where the formula holds given the trace
-    """
-    points: list[tuple[int, int]] = []
-
-    for i in range(0, grid_size[0]):
-        for j in range(0, grid_size[1]):
-            if formula.evaluate(trace, (i, j), grid_size):
-                points.append((i, j))
-
-    return points
 
 
 def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length, show_traces):

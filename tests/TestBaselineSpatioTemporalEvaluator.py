@@ -1,5 +1,5 @@
 import unittest
-from checkers.baseline_version.evaluator_baseline.SpatioTemporalEvaluator import generate_trace_from_spec, \
+from checkers.baseline_version.evaluator_baseline.BaselineSpatioTemporalEvaluator import generate_trace_from_spec, \
     satisfying_points, generate_traces
 from formula_types.ClassicalLogicFormula import And, Not, Prop
 from formula_types.HybridFormula import Nom, Bind
