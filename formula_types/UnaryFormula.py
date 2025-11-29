@@ -5,9 +5,10 @@ class UnaryFormula(HybridSpatioTemporalFormula):
     """
     Class for unary formulas.
     """
-    def __init__(self, op, operand):
+
+    def __init__(self, op: str, operand: HybridSpatioTemporalFormula):
         self.op = op
         self.operand = operand
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.op}({self.operand})"
