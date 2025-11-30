@@ -103,7 +103,7 @@ def dirs_to_offsets(dirs: list[str]) -> list[tuple[int, int]]:
     return offsets
 
 
-def parse_fixed_offset(formula: str) -> Optional[str, str, tuple[int, int]]:
+def parse_fixed_offset(formula: str) -> Union[tuple[str, str, tuple[int, int]], tuple[None, None, None]]:
     """
     Extracts dependent cars with their relative offset.
 

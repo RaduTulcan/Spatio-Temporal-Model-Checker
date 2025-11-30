@@ -4,8 +4,10 @@ from timeit import default_timer as timer
 from typing import Callable
 
 from checkers.baseline_version.evaluator_baseline.BaselineSpatioTemporalEvaluator import evaluate as evaluate_baseline
-from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator1 import evaluate as evaluate_optimized1
-from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator2 import evaluate as evaluate_optimized2
+from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator1 import \
+    evaluate as evaluate_optimized1
+from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator2 import \
+    evaluate as evaluate_optimized2
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
@@ -13,15 +15,16 @@ from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser
 def evaluate_handler(propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str],
                      grid_size: tuple[int, int], trace_max_length: int, show_traces: bool, evaluate: Callable):
     """
+    Runs the evaluation function of the model checker.
 
-   :param propositions:
-   :param nominals:
-   :param assumptions:
-   :param conclusions:
-   :param grid_size:
-   :param trace_max_length:
-   :param show_traces:
-   :return:
+   :param propositions: the list of propositions used in the formula
+   :param nominals: the list of nominals used in the formula
+   :param assumptions: the list of formulas used as assumptions
+   :param conclusions: the list of formulas used as conclusions
+   :param grid_size: the grid size used for building the traces
+   :param trace_max_length: the maximal length of traces to consider
+   :param show_traces: whether the (trace, point) tuples should be displayed in the console
+   :param evaluate: model checker evaluation function
    """
     start: float = timer()
     evaluate(propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces)
@@ -43,6 +46,7 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
    :param grid_size: the grid size used for building the traces
    :param trace_max_length: the maximal length of traces to consider
    :param show_traces: whether the (trace, point) tuples should be displayed in the console
+   :param evaluator_function: model checker evaluation function
    """
     TIMEOUT = 600
 
@@ -73,10 +77,10 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
 
 def front_back_test(test_index: int, evaluator_function: Callable):
     """
+    Tests a spatial validity.
 
-   :param evaluator_function:
-   :param test_index:
-   :return:
+   :param test_index: test index
+   :param evaluator_function: function of the checker for evaluating the formula
    """
     run_evaluator(test_index, [], ['z'], [], ["G(Left(Right(z)) <-> Right(Left(z)))"], (3, 3), 3, False,
                   evaluator_function)
@@ -84,9 +88,10 @@ def front_back_test(test_index: int, evaluator_function: Callable):
 
 def same_name_test(test_index: int, evaluator_function: Callable):
     """
+    Tests a hybrid formula.
 
-   :param test_index:
-   :param evaluator_function:
+   :param test_index: test index
+   :param evaluator_function: function of the checker for evaluating the formula
    :return:
    """
     run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False, evaluator_function)
@@ -129,27 +134,16 @@ def safe_intersection_priority(test_index: int, duration: int, grid_size: int, e
                   ["G(!(@z0 z1))"], (grid_size, grid_size), duration, False, evaluator_function)
 
 
-# Test description: In this two-lane scenario, POV1 moves forward at uneven speed. Initially SV moves forward at even speed.
-# If it is ever directly behind POV1, it swerves to left , then drives at high speed to overtake POV1, swerves right, then drives normally
-# z0 is SV, z1 is POV
-#
-# The five steps are
-# 1 move forward initially
-# 2 swerve left
-# 3 drive forward fast
-# 4 swerve right
-# 5 go forward at normal speed
-# The duration of each step is
-# Step 1: >=0 timesteps
-# Step 2: 1 timestep
-# Step 3: >0 timesteps
-# Step 4: 1 timestep
-# Step 5: all remaining timesteps.
-# Note the pattern  P & X (P Until Q) is used to ensure Step 3 runs for at least one timestep
-#
-# Usefulness: Stress-tests the Until operator. "Non-trivial example". Helps demonstrate the value of optimizing one vehicle when the other clearly cannot be optimized
-# (though we have other tests which demonstrate that same point)
 def safe_passing(test_index: int, duration: int, road_length: int, evaluator_function: Callable):
+    """
+    Tests maneuvers of vehicles: speed-up, swerving left and right.
+     A detailed description can be found in README.md/Experiments/Safe Passing.
+
+    :param test_index: test index
+    :param duration: maximal length of the traces
+    :param road_length: width and length of the road
+    :param evaluator_function: function of the checker for evaluating the formula
+    """
     # z0 initially moves forward
     first_forward = "(@z0 ↓z2 ((! X 1) | X @z0 (Back z2)))"
     # then swerves left to avoid z1
@@ -170,13 +164,16 @@ def safe_passing(test_index: int, duration: int, road_length: int, evaluator_fun
                   ["G(!(@z0 z1))"], (road_length, 2), duration, False, evaluator_function)
 
 
-# Test description: In this test, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. It can join the platoon by switching lanes
-# if the resulting position is both behind a car of the platoon and is safe.
-# Usefulness: Most other tests only scale the road while keeping the number of vehicles and the formulas the same. This test scales the number of vehicles and the size of the formulas,
-# which allows us to evaluate a different aspect of scalability compared to the other test cases.
-# Subtle note: We allow multiple cars in the platoon to have the same position as each other. We choose to see this as a feature instead of a bug, because it's equivalent
-# to testing all platoons of size *up to N* instead of size *exactly N*, e.g., if all cars in a 5-car platoon are in the same position, it functions as a 1-car platoon.
 def join_platoon(test_index: int, duration: int, platoon_size: int, road_length: int, evaluator_function: Callable):
+    """
+    Tests safe joining of a vehicle to a platoon of other vehicles.
+
+    :param test_index: test index
+    :param duration: maximal length of the traces
+    :param platoon_size: size of vehicle platoon
+    :param road_length: width and length of the road
+    :param evaluator_function: function of the checker for evaluating the formula
+    """
     pov_noms = ["z" + str(i + 1) for i in range(platoon_size)]
     noms = ["z0"] + pov_noms  # and z is a temporary
     no_collide = "!({})".format(reduce((lambda x, acc: x + "|" + acc), pov_noms))

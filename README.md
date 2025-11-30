@@ -226,3 +226,50 @@ In this scenario we also check for non-collision, expressed by `G(!(@z0 z1))`.
 
 **_Usefulness_**: Since the grid scales quadratically, new, larger test cases can be generated easily. Furthermore, crossing an intersection allows us
 to demonstrate a higher level of generality of our logic.
+
+### Safe Passing
+In this section we consider the following scenario: On a two-lane road, POV moves forward at uneven speed. 
+Initially SV moves forward at even speed. If it is ever directly behind POV, it swerves to left, 
+then drives at high speed to overtake POV, swerves right, then drives normally. Concretely, the scenario is
+divided into the following steps:
+1. move forward initially (duration of >=0 timesteps)
+2. swerve left (duration of 1 timestep)
+3. drive forward fast (duration of >0 timesteps)
+4. swerve right (duration of 1 timestep)
+5. go forward at normal speed (duration is all remaining timesteps)
+
+Furthermore, in this example, `z0` is SV, `z1` is POV, and `z2` a temporary variable. For modelling it, we used the following formulas:
+- `G(@z1 !(Right 1))`: POV starts anywhere in right lane, stays in right lane
+- `@z0 !(Right 1)`:  SV starts in the back
+- `@z0 !(Back 1)`: SV starts in the right lane
+- `G (@z1 ↓z2 ((! X 1) | X @z1  (z2 | Back z2)))`: POV moves forward or stays in place
+
+Moreover, the following formula encodes the 5-step behavior described above:
+`(φ1 U (φ2 & ((! X 1) | X (φ3 & ((! X 1) | X (φ3 U (φ4 & ((! X 1) | X G (φ5)))))))))`
+with:
+- `φ1:= (@z0 ↓z2 ((! X 1) | X @z0 (Back z2)))`: SV initially moves forward
+- `φ2:= (@z0 ↓z2 ((Front z1) & ((! X 1)| X (@z0 (Back (Right z2))))))`: SV swerves left
+- `φ3:= (@z0 ↓z2 ((! X 1)| X @z0 (Back (Back z2))))`: SV drives twice as fast
+- `φ4:= (@z0 ↓z2 ((! X 1)| X @z0 (Back (Left z2))))`: SV swerves right when safe
+- `φ5:= (@z0 ↓z2 ((! X 1) | X @z0 (Back z2)))`: SV drives normally
+Note the pattern  P & X (P Until Q) is used to ensure Step 3 runs for at least one timestep
+
+In this scenario we also check for non-collision, expressed by `G(!(@z0 z1))`.
+
+**Usefulness:** This scenario represents a stress-test for the Until operator. This non-trivial example
+Helps demonstrate the value of optimizing one vehicle when the other clearly cannot be optimized
+(though we have other tests which demonstrate that same point).
+
+# Join Platoon
+In this scenario, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. 
+It can join the platoon by switching lanes if the resulting position is both behind a car of the platoon and is safe.
+Here, `z0` is SV and `z1-zn` are the n POVs. We used the following formulas for modelling 
+this scenario:
+- TODO
+
+
+**Usefulness:** Most other tests only scale the road while keeping the number of vehicles and the formulas the same. 
+This test scales the number of vehicles and the size of the formulas, which allows us to evaluate a different aspect of scalability compared to the other test cases.
+
+_Subtle note:_ We allow multiple cars in the platoon to have the same position as each other. We choose to see this as a feature instead of a bug, because it's equivalent
+to testing all platoons of size *up to N* instead of size *exactly N*, e.g., if all cars in a 5-car platoon are in the same position, it functions as a 1-car platoon.
