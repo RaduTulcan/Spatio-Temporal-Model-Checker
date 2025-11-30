@@ -132,6 +132,8 @@ def get_movement_pattern(fml):
     if fml.op != "G":
         return None
     at_outer = fml.operand
+    if not hasattr(at_outer, 'op'):
+        return None
     if at_outer.op[0] != "@":
         return None
     arrow = at_outer.operand

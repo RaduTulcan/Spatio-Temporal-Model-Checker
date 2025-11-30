@@ -13,13 +13,16 @@ def divide_cars_in_types(assumptions, nominals):
     fixed_movement_cars = {}
     dependent_car_names = []
     fixed_movement_car_names = []
+    remaining_assupmtions = []
 
     for a in assumptions:
+        consumed = False
         a_fml = HybridSpatioTemporalParser(tokenize(a)).parse()
         # car is static
         static_car = parse_static_car(a)
         if static_car:
             static_cars.append(static_car)
+            consumed = True
 
         # car is dependent on another
         reference_car, dependent_car, dependent_offset = parse_fixed_offset(a)
@@ -30,6 +33,7 @@ def divide_cars_in_types(assumptions, nominals):
             if reference_car not in dependent_cars.keys():
                 dependent_cars[reference_car] = []
             dependent_cars[reference_car].append((dependent_car, dependent_offset))
+            consumed = True
 
         # car has a fixed movement
         fixed_movement_car, self_offsets = parse_fixed_movement(a, a_fml)
@@ -40,10 +44,13 @@ def divide_cars_in_types(assumptions, nominals):
             if fixed_movement_car not in fixed_movement_cars.keys():
                 fixed_movement_cars[fixed_movement_car] = []
             fixed_movement_cars[fixed_movement_car].extend(self_offsets)
+            consumed = True
 
+        if not consumed:
+            remaining_assupmtions.append(a)
     # independent_cars = set(nominals).difference(set(static_cars).union(set(dependent_car_names)).union(set(fixed_movement_car_names)))
 
-    return static_cars, dependent_cars, fixed_movement_cars
+    return static_cars, dependent_cars, fixed_movement_cars, remaining_assupmtions
 
 
 def build_adjacency(dependencies):
@@ -112,8 +119,26 @@ def placements_for_component(rel_pos, grid_x, grid_y):
             placements.append(placement)
     return placements
 
+def filter_state_assumptions(assumptions):
+    state_assumptions = []
+    remaining_assumptions = []
+    for a in assumptions:
+        if "X" not in a and "U" not in a and "F" not in a and tokenize(a)[0][1] == 'G':
+            state_assumptions.append(a)
+        else:
+            remaining_assumptions.append(a)
+    return state_assumptions, remaining_assumptions
 
-def generate_grids(grid_size, propositions, nominals, components):
+def test_state_assumptions(grid_size : tuple[int, int], trace : list[dict], parsed_assumptions : list[HybridSpatioTemporalFormula]) -> bool:
+    points = [(i, j) for i in range(grid_size[0]) for j in range(grid_size[1])]
+    for fml in parsed_assumptions:
+        for p in points:
+            if not fml.evaluate(trace, p, grid_size):
+                return False
+    return True
+
+
+def generate_grids(grid_size, propositions, nominals, components, state_assumptions):
     constrained_cars = set()
     for comp in components:
         constrained_cars.update(comp.keys())
@@ -173,10 +198,12 @@ def generate_grids(grid_size, propositions, nominals, components):
                     for c, pos in all_car_pos.items():
                         grid[c] = pos
 
-                    yield grid
+                    # check if the generated state satisfies the state assumptions
+                    if test_state_assumptions(grid_size, [grid], state_assumptions):
+                        yield grid
 
 
-def generate_traces(grid_size, propositions, nominals, static_cars, dependent_cars, fixed_movement_cars, trace_length):
+def generate_traces(grid_size, propositions, nominals, static_cars, dependent_cars, fixed_movement_cars, state_assumptions, trace_length):
     # build dependency graph between dependent cars
     adj = build_adjacency(dependent_cars)
 
@@ -190,7 +217,7 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
 
     independent_cars = set(nominals) - set(static_cars) - set(dep_cars) - set(fixed_movement_cars)
 
-    for grid in generate_grids(grid_size, propositions, nominals, components):
+    for grid in generate_grids(grid_size, propositions, nominals, components, state_assumptions):
         if trace_length == 1:
             yield [grid]
         else:
@@ -223,7 +250,7 @@ def generate_traces(grid_size, propositions, nominals, static_cars, dependent_ca
                         return
 
             yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components,
-                                    fixed_movement_cars, independent_cars, 1, trace_length, grid, [grid])
+                                    fixed_movement_cars, independent_cars, state_assumptions, 1, trace_length, grid, [grid])
 
 
 def check_in_bound(grid_size, point):
@@ -235,7 +262,7 @@ def add(p, d):
 
 
 def combine_placements(grid_size, curr_grid, static_car_names, components, fixed_movement_car_names,
-                       independent_car_names, moves, propositions):
+                       independent_car_names, moves, propositions, state_assumptions):
     # this is ok
     static_car_moves = []
     for c in static_car_names:
@@ -310,15 +337,24 @@ def combine_placements(grid_size, curr_grid, static_car_names, components, fixed
 
                         for name, pl_choice in zip(dep_cars, dependent_component_choice):
                             placement[name] = pl_choice
+                        
+                        for fml in state_assumptions:
+                            for p in points:
+                                if not fml.evaluate([placement], p, grid_size):
+                                    break
+                            else:
+                                continue
                         yield placement    
 
 
 def extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
-                 independent_cars, curr_trace_length, max_trace_length, prev_grid, trace):
+                 independent_cars, state_assumptions, curr_trace_length, max_trace_length, prev_grid, trace):
     if curr_trace_length <= max_trace_length:
         yield trace
         if curr_trace_length == max_trace_length:
             return
+    else:
+        raise Exception("Current trace length exceeded maximum trace length")
 
     moves = {}
 
@@ -371,20 +407,24 @@ def extend_trace(grid_size, propositions, static_cars, dependent_cars, component
 
     # combine placements
     for placement in combine_placements(grid_size, prev_grid, static_cars, components, fixed_movement_cars.keys(),
-                                        independent_cars, moves, propositions):
-        yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
-                                independent_cars, curr_trace_length + 1, max_trace_length, placement,
-                                trace + [placement])
+                                        independent_cars, moves, propositions, state_assumptions):
+        new_trace = trace + [placement]
+        if test_state_assumptions(grid_size, new_trace, state_assumptions):
+            yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components, fixed_movement_cars,
+                                    independent_cars, state_assumptions, curr_trace_length + 1, max_trace_length, placement,
+                                    trace + [placement])
 
 
 def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int],
              max_trace_length: int,
              show_traces: bool):
-    static_cars, dependent_cars, fixed_movement_cars = divide_cars_in_types(assumptions, nominals)
+    static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions = divide_cars_in_types(assumptions, nominals)
+    state_assumptions, remaining_assumptions = filter_state_assumptions(remaining_assumptions)
+    parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(fml)).parse() for fml in state_assumptions]
 
     # conjunction of assumptions and conclusion
     input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions),
-                                          *("(" + x + ")" for x in assumptions)])
+                                          *("(" + x + ")" for x in remaining_assumptions)])
 
     # parse the input formula
     parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
@@ -392,7 +432,7 @@ def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusi
     counter_sat = 0
     counter_gen = 0
     for t in generate_traces(grid_size, propositions, nominals, static_cars, dependent_cars, fixed_movement_cars,
-                             max_trace_length):
+                             parsed_state_assumptions, max_trace_length):
         sat_points = satisfying_points(parsed_formula, t, grid_size)
 
         if sat_points:
