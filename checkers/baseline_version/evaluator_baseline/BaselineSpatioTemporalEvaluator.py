@@ -4,7 +4,8 @@ from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormul
 from parsers.HybridSpatioTemporalFormulaParser import tokenize, HybridSpatioTemporalParser
 
 
-def generate_traces(props: list[str], noms: list[str], max_trace_length: int, grid_size: tuple[int, int]) -> list[list[dict]]:
+def generate_traces(props: list[str], noms: list[str], max_trace_length: int, grid_size: tuple[int, int]) -> list[
+    list[dict]]:
     """
     Generates all traces up to a given length based on the given grid structure.
 

@@ -28,6 +28,7 @@ class At(UnaryFormula):
     def __init__(self, name: str, op: str, operand: HybridSpatioTemporalFormula):
         super().__init__(op, operand)
         self.name = name
+        self.operator_string = f"@{name}"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -43,6 +44,7 @@ class Bind(UnaryFormula):
     def __init__(self, name: str, op: str, operand: HybridSpatioTemporalFormula):
         super().__init__(op, operand)
         self.name = name
+        self.operator_string = f"↓{name}"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],

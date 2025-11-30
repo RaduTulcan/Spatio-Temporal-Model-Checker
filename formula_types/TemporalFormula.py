@@ -8,6 +8,10 @@ class Next(UnaryFormula):
         Class for temporal next operator.
     """
 
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "X"
+
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
                           memo: dict[tuple[HybridSpatioTemporalFormula, int], bool]) -> bool:
@@ -21,6 +25,9 @@ class Eventually(UnaryFormula):
     """
         Class for temporal eventually operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "F"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -39,6 +46,9 @@ class Always(UnaryFormula):
     """
         Class for temporal always operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "G"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -57,6 +67,9 @@ class Until(BinaryFormula):
     """
         Class for temporal until operator.
     """
+    def __init__(self, op, left, right):
+        super().__init__(op, left, right)
+        self.operator_string = "U"
 
     # recursive version (faster, but hits recursion limit for very long traces)
     @memoize

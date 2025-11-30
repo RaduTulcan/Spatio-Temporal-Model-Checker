@@ -6,6 +6,9 @@ class Front(UnaryFormula):
     """
        Class for spatial front operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "Front"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -20,6 +23,9 @@ class Back(UnaryFormula):
     """
         Class for spatial back operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "Back"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -34,6 +40,9 @@ class Left(UnaryFormula):
     """
         Class for spatial left operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "Left"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -48,6 +57,9 @@ class Right(UnaryFormula):
     """
         Class for spatial right operator.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "Right"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],

@@ -1,3 +1,4 @@
+from formula_types.HybridFormula import Nom
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula, memoize
 from formula_types.UnaryFormula import UnaryFormula
 from formula_types.BinaryFormula import BinaryFormula
@@ -44,7 +45,7 @@ class Prop(HybridSpatioTemporalFormula):
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
-                          memo: dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]) -> bool:
+                          memo: dict[tuple[HybridSpatioTemporalFormula, int], bool]) -> bool:
         return point in trace[time][self.name]
 
 
@@ -57,10 +58,14 @@ class Not(UnaryFormula):
     """
        Class for logical negation.
     """
+    def __init__(self, op, operand):
+        super().__init__(op, operand)
+        self.operator_string = "¬"
+
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
-                          memo: dict[tuple[HybridSpatioTemporalFormula, int, tuple[int, int]], bool]) -> bool:
+                          memo: dict[tuple[HybridSpatioTemporalFormula, int], bool]) -> bool:
         return not self.operand.evaluate_memoized(trace, time, point, grid_size, memo)
 
 
@@ -73,6 +78,9 @@ class And(BinaryFormula):
     """
        Class for logical constant conjunction.
     """
+    def __init__(self, op, left, right):
+        super().__init__(op, left, right)
+        self.operator_string = "∧"
 
     @memoize
     def evaluate_memoized(self, trace, time, point, grid_size,
@@ -88,6 +96,9 @@ class If(BinaryFormula):
     """
        Class for logical implication.
     """
+    def __init__(self, op, left, right):
+        super().__init__(op, left, right)
+        self.operator_string = "→"
 
     @memoize
     def evaluate_memoized(self, trace: list[dict], time: int, point: tuple[int, int], grid_size: tuple[int, int],
@@ -100,6 +111,9 @@ class Iff(BinaryFormula):
     """
        Class for logical bi-implication.
     """
+    def __init__(self, op, left, right):
+        super().__init__(op, left, right)
+        self.operator_string = "↔"
 
     @memoize
     def evaluate_memoized(self, trace, time, point, grid_size,
@@ -114,6 +128,10 @@ class Or(BinaryFormula):
     """
        Class for logical disjunction.
     """
+
+    def __init__(self, op, left, right):
+        super().__init__(op, left, right)
+        self.operator_string = "|"
 
     @memoize
     def evaluate_memoized(self, trace, time, point, grid_size,
