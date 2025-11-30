@@ -47,7 +47,7 @@ class TestOptimizedSpatioTemporalEvaluator1(unittest.TestCase):
         z2_behind_z3 = "G @z2 Front z3"
         a_until_b = "G (a | b)"
         assumptions = [z1_fixed, z2_behind_z3, a_until_b]
-        static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions = divide_cars_in_types(assumptions, ['z1', 'z2', 'z3'])
+        static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions = divide_cars_in_types(assumptions)
         adj = build_adjacency(dependent_cars)
         components = compute_components(adj)
         parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(fml)).parse() for fml in remaining_assumptions]
@@ -71,7 +71,7 @@ class TestOptimizedSpatioTemporalEvaluator1(unittest.TestCase):
         assumptions1 = [z1_fixed, z2_behind_z3, a_or_b]
         nominals = ["z1", "z2", "z3"]
 
-        static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions1 = divide_cars_in_types(assumptions1, nominals)
+        static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions1 = divide_cars_in_types(assumptions1)
         state_assumptions, remaining_assumptions1 = filter_state_assumptions(remaining_assumptions1)
         parsed_state_assumptions1 = [HybridSpatioTemporalParser(tokenize(fml)).parse() for fml in state_assumptions]
 
