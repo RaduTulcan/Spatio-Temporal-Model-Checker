@@ -121,7 +121,8 @@ def compute_components(adjacency_graph: dict) -> list[dict]:
                         break
 
         if not ok:
-            return []  # inconsistent system -> no grids at all
+            # return []  # inconsistent system -> no grids at all
+            raise Exception("The given dependency formulas create a contradiction")
 
         components.append(relative_pos)
         visited.update(relative_pos.keys())
@@ -271,7 +272,7 @@ def generate_grids(grid_size: tuple[int, int], propositions: list[str], nominals
                     for c, pos in all_car_pos.items():
                         grid[c] = pos
 
-                    # check if the generated state satisfies the state assumptions
+                    # check if the generated grid satisfies the state assumptions
                     if test_state_assumptions(grid_size, [grid], state_assumptions):
                         yield grid
 
@@ -549,8 +550,9 @@ def extend_trace(grid_size: tuple[int, int], propositions: list[str], static_car
     # combine placements
     for placement in combine_placements(grid_size, prev_grid, static_cars, components, list(fixed_movement_cars.keys()),
                                         independent_cars, moves, propositions, state_assumptions):
-        new_trace: list[dict] = trace + [placement]
-        if test_state_assumptions(grid_size, new_trace, state_assumptions):
+        # new_trace: list[dict] = trace + [placement]
+        # check if the generated placement satisfies the state assumptions
+        if test_state_assumptions(grid_size, [placement], state_assumptions):
             yield from extend_trace(grid_size, propositions, static_cars, dependent_cars, components,
                                     fixed_movement_cars,
                                     independent_cars, state_assumptions, curr_trace_length + 1, max_trace_length,
