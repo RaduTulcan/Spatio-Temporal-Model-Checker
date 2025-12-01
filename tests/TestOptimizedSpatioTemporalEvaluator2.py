@@ -38,6 +38,7 @@ class TestOptimizedSpatioTemporalEvaluator1(unittest.TestCase):
         always_at_z1_left_z2 = Always("ALWAYS", At("z1", "AT", Left("LEFT", self.z2)))
         self.assertTrue(
             2 == len(list(generate_grids(self.grid_size, [], ["z1", "z2"], [], [always_at_z1_left_z2]))))
+        
 
     def test_generate_all_satisfying_grids2(self):
         self.assertTrue(16 == len(list(generate_grids(self.grid_size, [], ["z1", "z2"], [], []))))
@@ -53,7 +54,15 @@ class TestOptimizedSpatioTemporalEvaluator1(unittest.TestCase):
         parsed_state_assumptions = [HybridSpatioTemporalParser(tokenize(fml)).parse() for fml in remaining_assumptions]
         grids = list(generate_grids(self.grid_size, ['a', 'b'], ['z1', 'z2', 'z3'], components, parsed_state_assumptions))
         # print(len(grids))
-        self.assertTrue(True)
+        self.assertTrue((3**4) * 4 * 2 == len(grids))
+
+    def test_generate_inconsistent_grids(self):
+        z1_behind_z2 = "G @z1 Front z2"
+        z1_ahead_z2 = "G @z1 Back z2"
+        assumptions = [z1_behind_z2, z1_ahead_z2]
+        static_cars, dependent_cars, fixed_movement_cars, remaining_assumptions = divide_cars_in_types(assumptions)
+        adj = build_adjacency(dependent_cars)
+        self.assertRaises(Exception, compute_components, adj)
 
     def test_generate_traces1(self):
         self.assertTrue(16 * 4 == len(list(generate_traces(self.grid_size, ["a"], ["z1"], [], {}, {}, [], 1))))

@@ -50,7 +50,7 @@ def divide_cars_in_types(assumptions: list[str]) -> tuple[list[str], dict, dict,
         # car has a fixed movement
         fixed_movement_car: str
         self_offsets: list[tuple[int, int]]
-        fixed_movement_car, self_offsets = parse_fixed_movement(a, a_fml)
+        fixed_movement_car, self_offsets = parse_fixed_movement(a_fml)
 
         if fixed_movement_car and self_offsets:
             fixed_movement_car_names.append(fixed_movement_car)
@@ -121,7 +121,8 @@ def compute_components(adjacency_graph: dict) -> list[dict]:
                         break
 
         if not ok:
-            return []  # inconsistent system -> no grids at all
+            # return []  # inconsistent system -> no grids at all
+            raise Exception("The given dependency formulas create a contradiction")
 
         components.append(relative_pos)
         visited.update(relative_pos.keys())
@@ -215,8 +216,8 @@ def generate_grids(grid_size: tuple[int, int], propositions: list[str], nominals
     for comp in components:
         constrained_cars.update(comp.keys())
 
-    if not components:
-        raise Exception("The given dependency formulas create a contradiction")
+    # if not components:
+    #     raise Exception("The given dependency formulas create a contradiction")
 
     # generate placements for dependent cars
     component_placements = []
@@ -271,7 +272,7 @@ def generate_grids(grid_size: tuple[int, int], propositions: list[str], nominals
                     for c, pos in all_car_pos.items():
                         grid[c] = pos
 
-                    # check if the generated state satisfies the state assumptions
+                    # check if the generated grid satisfies the state assumptions
                     if test_state_assumptions(grid_size, [grid], state_assumptions):
                         yield grid
 
