@@ -50,7 +50,7 @@ def divide_cars_in_types(assumptions: list[str]) -> tuple[list[str], dict, dict,
         # car has a fixed movement
         fixed_movement_car: str
         self_offsets: list[tuple[int, int]]
-        fixed_movement_car, self_offsets = parse_fixed_movement(a, a_fml)
+        fixed_movement_car, self_offsets = parse_fixed_movement(a_fml)
 
         if fixed_movement_car and self_offsets:
             fixed_movement_car_names.append(fixed_movement_car)
@@ -215,7 +215,7 @@ def generate_grids(grid_size: tuple[int, int], propositions: list[str], nominals
     for comp in components:
         constrained_cars.update(comp.keys())
 
-    if not components:
+    if components is None:
         raise Exception("The given dependency formulas create a contradiction")
 
     # generate placements for dependent cars
