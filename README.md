@@ -263,9 +263,15 @@ Helps demonstrate the value of optimizing one vehicle when the other clearly can
 # Join Platoon
 In this scenario, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. 
 It can join the platoon by switching lanes if the resulting position is both behind a car of the platoon and is safe.
-Here, `z0` is SV and `z1-zn` are the n POVs. We used the following formulas for modelling 
-this scenario:
-- TODO
+Here, `z0` is SV and `z1-zn` are the n POVs. In the following, we write `|i in [1..n] P(i)` for an n-ary disjunction.
+We assume the following formulas:
+- `φ1:= @z0 !(Right 1)`: SV starts in the right lane
+- `φ2:= G(@zi !(Left 1)) (for i in [1,n])`: POVs are always in left lane
+- `φ3:= G(@z0 ↓z ((! X 1) | (X @z0((Back z)|`: SV, go forward any time, or
+          `((|i in [1,n] Front zi)&(Right z)&(!(|i in [1,n] zi))))))` switch lane if safe
+- `φ4:= G(@zi ↓z ((! X 1) | X (@zi (Back z)))) (for i in [1,n])`: Platoon cars move forward
+And the conclusion is:
+- `φ5:= G(@z0 !(|i in [1,n] zi))` Collision avoidance
 
 
 **Usefulness:** Most other tests only scale the road while keeping the number of vehicles and the formulas the same. 
