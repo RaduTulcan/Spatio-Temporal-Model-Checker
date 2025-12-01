@@ -60,7 +60,7 @@ def generate_all_satisfying_grids(props: list[str], noms: list[str], grid_size: 
     return allowed_grids
 
 
-def generate_traces(props: list[str], noms: list[str], grid_size: tuple[int, int], max_trace_length: int,
+def generate_traces(props: list[str], noms: list[str], max_trace_length: int, grid_size: tuple[int, int],
                     parsed_state_formulas: list[HybridSpatioTemporalFormula]) -> list[list[dict]]:
     """
     Generates all traces up to a given length based on the given grid structure.
