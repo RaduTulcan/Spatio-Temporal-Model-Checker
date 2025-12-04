@@ -114,6 +114,34 @@ def one_lane_follow_test(test_index: int, duration: int, road_length: int, evalu
                   # SV Always moves forward if safe, stays put if POV immediately ahead
                   ["G(!(@z0 z1))"], (road_length, 1), duration, False, evaluator_function)
 
+def hazard_test(test_index: int, duration: int, evaluator_function: Callable):
+    """
+    Tests whether vehicle can avoid static hazard in presence of another vehicle.
+    Figure 3 in paper
+    
+    :param test_index: test index
+    :param duration: maximal length of traces
+    :param evaluator_function: function of the checker for evaluating the formula
+    """
+    width = 2
+    length = 2 
+    def fronts(i: int, p: str):
+        if i == 0:
+            return "({})".format(p)
+        else:
+            return "(Front {})".format(fronts(i-1, p))
+    def bfront(p: str):
+        each = ["(({})->({}))".format(fronts(i+1,"1"),fronts(i+1,p)) for i in range(0,length)]
+        return "({})".format(reduce((lambda x, acc: x + "&" + acc), each))
+    def dfront(p: str):
+        each = [fronts(i+1,p) for i in range(0,length)]
+        return "({})".format(reduce((lambda x, acc: x + "|" + acc), each))
+    p1="(Right z1) & {}".format(dfront("G h"))
+    p2="((! X 1 ) | (X @z0 ((Back z2) & (G ! h))))"
+    p3="@z0 ({} & (Left z2) & {})".format(dfront("z1"),bfront("G ! h"))
+    a1="@z0 ({})".format(p1)
+    c1="@z0 (↓z2 (({}) U X ({})))".format(p2,p3)
+    run_evaluator(test_index, ["h"], ["z0", "z1"], [a1], [c1], (length,width), duration, False, evaluator_function)
 
 def safe_intersection_priority(test_index: int, duration: int, grid_size: int, evaluator_function: Callable):
     """
@@ -190,8 +218,7 @@ def join_platoon(test_index: int, duration: int, platoon_size: int, road_length:
 
 
 if __name__ == '__main__':
-
-    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]:
+    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]: 
         # Test 1
         front_back_test(1, funct)
         # Test 2
@@ -201,18 +228,22 @@ if __name__ == '__main__':
         one_lane_follow_test(4, 3, 6, funct)
         one_lane_follow_test(5, 3, 9, funct)
         one_lane_follow_test(6, 3, 12, funct)
+        one_lane_follow_test(7, 3, 15, funct)
+        one_lane_follow_test(8, 3, 18, funct)
         # Test 4
-        safe_intersection_priority(7, 3, 3, funct)
-        safe_intersection_priority(8, 4, 4, funct)
-        safe_intersection_priority(9, 5, 5, funct)
-        safe_intersection_priority(10, 6, 6, funct)
+        hazard_test(9, 2, funct)
+        hazard_test(10, 3, funct)
         # Test 5
-        safe_passing(11, 3, 5, funct)
-        safe_passing(12, 6, 5, funct)
-        safe_passing(13, 9, 5, funct)
-        safe_passing(14, 12, 5, funct)
+        safe_intersection_priority(11, 2, 2, funct)
+        safe_intersection_priority(12, 3, 3, funct)
+        safe_intersection_priority(13, 4, 4, funct)
         # Test 6
-        join_platoon(15, 3, 2, 6, funct)
-        join_platoon(16, 3, 3, 6, funct)
-        join_platoon(17, 3, 4, 6, funct)
-        join_platoon(18, 3, 5, 6, funct)
+        safe_passing(14, 2, 4, funct)
+        safe_passing(15, 3, 4, funct)
+        safe_passing(16, 4, 4, funct)
+        safe_passing(17, 5, 4, funct)
+        # Test 7
+        join_platoon(18, 3, 2, 5, funct)
+        join_platoon(19, 3, 3, 5, funct)
+        join_platoon(20, 3, 4, 5, funct)
+        join_platoon(21, 3, 5, 5, funct)
