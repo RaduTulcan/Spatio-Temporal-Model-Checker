@@ -137,11 +137,10 @@ def hazard_test(test_index: int, duration: int, evaluator_function: Callable):
         each = [fronts(i+1,p) for i in range(0,length)]
         return "({})".format(reduce((lambda x, acc: x + "|" + acc), each))
     p1="(Right z1) & {}".format(dfront("G h"))
-    p2="((! X 1 ) | (X @z0 ((Back z2) & (G ! h))))"
-    p3="@z0 ({} & (Left z2) & {})".format(dfront("z1"),bfront("G ! h"))
-    a1="@z0 ({})".format(p1)
-    c1="@z0 (↓z2 (({}) U X ({})))".format(p2,p3)
-    run_evaluator(test_index, ["h"], ["z0", "z1"], [a1], [c1], (length,width), duration, False, evaluator_function)
+    p2="(@z0 ↓z2 X @z0 ((Back z2) & (G ! h)))"
+    p3="(@z0 ↓z2 X @z0((Left z2) & {} & {}))".format(dfront("z1"),bfront("G ! h"))
+    full="@z0 (({}) & (({}) U ({})))".format(p1,p2,p3)
+    run_evaluator(test_index, ["h"], ["z0", "z1"], [], [full], (length,width), duration, False, evaluator_function)
 
 def safe_intersection_priority(test_index: int, duration: int, grid_size: int, evaluator_function: Callable):
     """
@@ -233,7 +232,7 @@ if __name__ == '__main__':
         # Test 4
         hazard_test(9, 2, funct)
         hazard_test(10, 3, funct)
-        # Test 5
+        # Test 5 
         safe_intersection_priority(11, 2, 2, funct)
         safe_intersection_priority(12, 3, 3, funct)
         safe_intersection_priority(13, 4, 4, funct)
