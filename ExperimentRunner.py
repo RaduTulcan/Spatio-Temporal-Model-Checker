@@ -75,7 +75,7 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
         p.join()
 
 
-def front_back_test(test_index: int, evaluator_function: Callable):
+def left_right_test(test_index: int, evaluator_function: Callable):
     """
     Tests a spatial validity.
 
@@ -219,7 +219,7 @@ def join_platoon(test_index: int, duration: int, platoon_size: int, road_length:
 if __name__ == '__main__':
     for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]: 
         # Test 1
-        front_back_test(1, funct)
+        left_right_test(1, funct)
         # Test 2
         same_name_test(2, funct)
         # Test 3
