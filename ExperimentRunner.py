@@ -158,7 +158,7 @@ def safe_intersection_priority(test_index: int, duration: int, grid_size: int, e
                    "G (@z1 ↓z2 ((! X 1)| X @z1 (Left z2)))",  # Moves left-to-right always
                    "G (@z0 ↓z2 ((! X 1)| X @z0 ((!z1 & Back z2) | (z2 & Front z1) )))"],
                   # Moves bottom-to-top except it stops to avoid other vehicle.
-                  ["G(!(@z0 z1))"], (grid_size, grid_size), duration, False, evaluator_function)
+                  ["G (@z0 !z1)"], (grid_size, grid_size), duration, False, evaluator_function)
 
 
 def safe_passing(test_index: int, duration: int, road_length: int, evaluator_function: Callable):
@@ -188,7 +188,7 @@ def safe_passing(test_index: int, duration: int, road_length: int, evaluator_fun
                    "G (@z1 ↓z2 ((! X 1) | X @z1  (z2 | Back z2)))",  # z1 moves forward or stays in place
                    "({} U ({} & ((! X 1) | X ({} & ((! X 1) | X ({} U ({} & ((! X 1) | X G ({})))))))))".format(
                        first_forward, dodge_left, fast_forward, fast_forward, dodge_right, last_forward)],
-                  ["G(!(@z0 z1))"], (road_length, 2), duration, False, evaluator_function)
+                  ["G (@z0 !z1)"], (road_length, 2), duration, False, evaluator_function)
 
 
 def join_platoon(test_index: int, duration: int, platoon_size: int, road_length: int, evaluator_function: Callable):
@@ -220,33 +220,32 @@ def global_soundness(test_index: int, duration: int, evaluator_function: Callabl
 
 if __name__ == '__main__':
     for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]: 
-        #global_soundness(1,2,funct)
         # Test 1
-        #left_right_test(1, funct)
+        left_right_test(1, funct)
         # Test 2
-        #same_name_test(2, funct)
+        same_name_test(2, funct)
         # Test 3
         one_lane_follow_test(3, 3, 3, funct)
-        #one_lane_follow_test(4, 3, 6, funct)
-        #one_lane_follow_test(5, 3, 9, funct)
-        #one_lane_follow_test(6, 3, 12, funct)
-        #one_lane_follow_test(7, 3, 15, funct)
-        #one_lane_follow_test(8, 3, 18, funct)
+        one_lane_follow_test(4, 3, 6, funct)
+        one_lane_follow_test(5, 3, 9, funct)
+        one_lane_follow_test(6, 3, 12, funct)
+        one_lane_follow_test(7, 3, 15, funct)
+        one_lane_follow_test(8, 3, 18, funct)
         # Test 4
-        #hazard_test(9, 2, funct)
-        #hazard_test(10, 3, funct)
-        #hazard_test(11, 4, funct)
+        hazard_test(9, 2, funct)
+        hazard_test(10, 3, funct)
+        hazard_test(11, 4, funct)
         # Test 5 
-        #safe_intersection_priority(12, 2, 2, funct)
-        #safe_intersection_priority(13, 3, 3, funct)
-        #safe_intersection_priority(14, 4, 4, funct)
+        safe_intersection_priority(12, 2, 2, funct)
+        safe_intersection_priority(13, 3, 3, funct)
+        safe_intersection_priority(14, 4, 4, funct)
         # Test 6
-        #safe_passing(15, 2, 4, funct)
-        #safe_passing(16, 3, 4, funct)
-        #safe_passing(17, 4, 4, funct)
-        #safe_passing(18, 5, 4, funct)
+        safe_passing(15, 2, 4, funct)
+        safe_passing(16, 3, 4, funct)
+        safe_passing(17, 4, 4, funct)
+        safe_passing(18, 5, 4, funct)
         # Test 7
-        #join_platoon(19, 3, 2, 5, funct)
-        #join_platoon(20, 3, 3, 5, funct)
-        #join_platoon(21, 3, 4, 5, funct)
-        #join_platoon(22, 3, 5, 5, funct)
+        join_platoon(19, 3, 2, 5, funct)
+        join_platoon(20, 3, 3, 5, funct)
+        join_platoon(21, 3, 4, 5, funct)
+        join_platoon(22, 3, 5, 5, funct)
