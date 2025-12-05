@@ -1,4 +1,5 @@
 from checkers.SpatioTemporalEvaluatorUtils import satisfying_points, powerset
+from checkers.optimized_version.OptimizedEvaluatorUtils import strip_parentheses
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from itertools import product
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
@@ -83,6 +84,18 @@ def generate_traces(props: list[str], noms: list[str], max_trace_length: int, gr
             yield list(tup)
 
 
+# She who fixes soundness bugs the afternoon of the deadline be not bound by style guides
+def is_state_formula_string(s: str):
+    toks = [x for x in tokenize(s) if x[1] != "(" and x[1] != ")"]
+    if "X" in s or "U" in s or "F" in s:
+        return False
+    if len(toks) < 2:
+        return False
+    if toks[0][1] == 'G':
+        if toks[1][1][0] == '@':
+            return True
+    return False
+
 def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length, show_traces):
     """
     Prints the number of traces and, if parameter show_traces, also the traces where spatial points have
@@ -101,7 +114,7 @@ def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length,
     state_fmls = []
 
     for a in assumptions + conclusions:
-        if "X" not in a and "U" not in a and "F" not in a and tokenize(a)[0][1] == 'G':
+        if is_state_formula_string(a):
             state_fmls.append(a)
 
     parsed_state_fmls: list[HybridSpatioTemporalFormula] = [HybridSpatioTemporalParser(tokenize(assumption)).parse() for

@@ -1,7 +1,7 @@
 from itertools import product
 from checkers.SpatioTemporalEvaluatorUtils import satisfying_points, powerset
 from checkers.optimized_version.OptimizedEvaluatorUtils import parse_static_car, parse_fixed_offset, \
-    parse_fixed_movement
+    parse_fixed_movement, strip_parentheses
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
 
@@ -162,6 +162,17 @@ def placements_for_component(dependent_component: dict, grid_x: int, grid_y: int
             placements.append(placement)
     return placements
 
+# She who fixes soundness bugs the afternoon of the deadline be not bound by style guides
+def is_state_formula_string(s: str):
+    toks = [x for x in tokenize(s) if x[1] != "(" and x[1] != ")"]
+    if "X" in s or "U" in s or "F" in s:
+        return False
+    if len(toks) < 2:
+        return False
+    if toks[0][1] == 'G':
+        if toks[1][1][0] == '@':
+            return True
+    return False
 
 def filter_state_assumptions(assumptions: list[str]) -> tuple[list[str], list[str]]:
     """
@@ -174,7 +185,7 @@ def filter_state_assumptions(assumptions: list[str]) -> tuple[list[str], list[st
     state_assumptions: list[str] = []
     remaining_assumptions: list[str] = []
     for a in assumptions:
-        if "X" not in a and "U" not in a and "F" not in a and tokenize(a)[0][1] == 'G':
+        if is_state_formula_string(a):
             state_assumptions.append(a)
         else:
             remaining_assumptions.append(a)
