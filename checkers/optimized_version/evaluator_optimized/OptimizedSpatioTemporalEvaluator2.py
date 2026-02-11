@@ -162,6 +162,7 @@ def placements_for_component(dependent_component: dict, grid_x: int, grid_y: int
             placements.append(placement)
     return placements
 
+
 # She who fixes soundness bugs the afternoon of the deadline be not bound by style guides
 def is_state_formula_string(s: str):
     toks = [x for x in tokenize(s) if x[1] != "(" and x[1] != ")"]
@@ -173,6 +174,7 @@ def is_state_formula_string(s: str):
         if toks[1][1][0] == '@':
             return True
     return False
+
 
 def filter_state_assumptions(assumptions: list[str]) -> tuple[list[str], list[str]]:
     """

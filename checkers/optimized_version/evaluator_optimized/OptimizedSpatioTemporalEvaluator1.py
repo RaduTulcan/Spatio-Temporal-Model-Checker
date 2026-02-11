@@ -1,5 +1,4 @@
 from checkers.SpatioTemporalEvaluatorUtils import satisfying_points, powerset
-from checkers.optimized_version.OptimizedEvaluatorUtils import strip_parentheses
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from itertools import product
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
@@ -96,6 +95,7 @@ def is_state_formula_string(s: str):
             return True
     return False
 
+
 def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length, show_traces):
     """
     Prints the number of traces and, if parameter show_traces, also the traces where spatial points have
@@ -108,7 +108,7 @@ def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length,
     :param grid_size: the dimensions of the grid the traces are build on
     :param max_trace_length: the maximal length the traces should be
     :param show_traces: whether the satisfying traces should be shown in the console
-        """
+    """
 
     # filter global formula with propositional/hybrid or other global arguments
     state_fmls = []
@@ -130,6 +130,7 @@ def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length,
 
     counter_sat: int = 0
     counter_gen: int = 0
+
     # evaluate the input formula on all the generated traces over the given propositions
     # and nominals, and with maximal length max_trace_length
     for t in generate_traces(props, noms, max_trace_length, grid_size, parsed_state_fmls):
