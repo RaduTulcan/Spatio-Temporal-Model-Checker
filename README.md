@@ -215,12 +215,15 @@ The project contains multiple folders. Their contents are summarized in the list
 - `checker/optimized_version`: contains the implementation of the two optimized versions of our model checker
 - `formula_types`: contains all necessary classes and methods for the various operators of our logic and their evaluation
 - `parsers`: includes parser code for the different components of our language
-- 'tests': contains unit tests used to validate smaller components of the implementation before ExperimentRunner.py was completed.
+- `tests`: contains unit tests used to validate smaller components of the implementation before ExperimentRunner.py was completed.
 - `ExperimentRunner.py`: contains the code for the experiments included in the paper and detailed [below](#experiments).
 
 We aim for research-grade code, not production-grade. We make an effort to document key information, but we do not aim 
 for user-friendly error messages and we permit significant code duplication, in part because this helps ensure that changes
-to implementation details in the optimized algorithms do not change the "baseline" performance, which is supposed to be stable.
+to implementation details in the optimized algorithms do not change the "baseline" performance, which is supposed to be stable. 
+
+The unit tests in the "tests" directory do not need to be run to evaluate the claims of the paper, but if you wish to run them, 
+you can invoke the Python interpreter on any test file, with the repository root on your Python path.
 
 ### Experiments
 The file `ExperimentRunner.py` contains the experiments conducted for our paper. This section will go over the experiments in detail.
