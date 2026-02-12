@@ -1,5 +1,7 @@
 import multiprocessing
+import sys
 from functools import reduce
+from pathlib import Path
 from timeit import default_timer as timer
 from typing import Callable
 
@@ -10,6 +12,8 @@ from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvalu
     evaluate as evaluate_optimized2
 from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
 from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
+
+import argparse
 
 
 def evaluate_handler(propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str],
@@ -114,6 +118,7 @@ def one_lane_follow_test(test_index: int, duration: int, road_length: int, evalu
                   # SV Always moves forward if safe, stays put if POV immediately ahead
                   ["G(@z0 ! z1)"], (road_length, 1), duration, False, evaluator_function)
 
+
 def hazard_test(test_index: int, duration: int, evaluator_function: Callable):
     """
     Tests whether vehicle can avoid static hazard in presence of another vehicle.
@@ -124,23 +129,28 @@ def hazard_test(test_index: int, duration: int, evaluator_function: Callable):
     :param evaluator_function: function of the checker for evaluating the formula
     """
     width = 2
-    length = 2 
+    length = 2
+
     def fronts(i: int, p: str):
         if i == 0:
             return "({})".format(p)
         else:
-            return "(Front {})".format(fronts(i-1, p))
+            return "(Front {})".format(fronts(i - 1, p))
+
     def bfront(p: str):
-        each = ["(({})->({}))".format(fronts(i+1,"1"),fronts(i+1,p)) for i in range(0,length)]
+        each = ["(({})->({}))".format(fronts(i + 1, "1"), fronts(i + 1, p)) for i in range(0, length)]
         return "({})".format(reduce((lambda x, acc: x + "&" + acc), each))
+
     def dfront(p: str):
-        each = [fronts(i+1,p) for i in range(0,length)]
+        each = [fronts(i + 1, p) for i in range(0, length)]
         return "({})".format(reduce((lambda x, acc: x + "|" + acc), each))
-    p1="(Right z1) & {}".format(dfront("G h"))
-    p2="(@z0 ↓z2 X @z0 ((Back z2) & (G ! h)))"
-    p3="(@z0 ↓z2 X @z0((Left z2) & {} & {}))".format(dfront("z1"),bfront("G ! h"))
-    full="@z0 (({}) & (({}) U ({})))".format(p1,p2,p3)
-    run_evaluator(test_index, ["h"], ["z0", "z1"], [], [full], (length,width), duration, False, evaluator_function)
+
+    p1 = "(Right z1) & {}".format(dfront("G h"))
+    p2 = "(@z0 ↓z2 X @z0 ((Back z2) & (G ! h)))"
+    p3 = "(@z0 ↓z2 X @z0((Left z2) & {} & {}))".format(dfront("z1"), bfront("G ! h"))
+    full = "@z0 (({}) & (({}) U ({})))".format(p1, p2, p3)
+    run_evaluator(test_index, ["h"], ["z0", "z1"], [], [full], (length, width), duration, False, evaluator_function)
+
 
 def safe_intersection_priority(test_index: int, duration: int, grid_size: int, evaluator_function: Callable):
     """
@@ -215,11 +225,35 @@ def join_platoon(test_index: int, duration: int, platoon_size: int, road_length:
     postcond = "G(@z0 ({}))".format(no_collide)
     run_evaluator(test_index, [], noms, assumps, [postcond], (road_length, 2), duration, False, evaluator_function)
 
-def global_soundness(test_index: int, duration: int, evaluator_function: Callable):
-    run_evaluator(test_index, [], ["z0"], ["G !(Left 1)"], ["1"], (2,2), duration, False, evaluator_function)
 
-if __name__ == '__main__':
-    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]: 
+def global_soundness(test_index: int, duration: int, evaluator_function: Callable):
+    run_evaluator(test_index, [], ["z0"], ["G !(Left 1)"], ["1"], (2, 2), duration, False, evaluator_function)
+
+
+def run_quick_test_cases():
+    """
+    Runs the set of fast test cases.
+    """
+    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]:
+        left_right_test(1, funct)
+        same_name_test(2, funct)
+        one_lane_follow_test(3, 3, 3, funct)
+        one_lane_follow_test(4, 3, 6, funct)
+        one_lane_follow_test(5, 3, 9, funct)
+        one_lane_follow_test(6, 3, 12, funct)
+        hazard_test(9, 2, funct)
+        hazard_test(10, 3, funct)
+        safe_intersection_priority(12, 2, 2, funct)
+        safe_intersection_priority(13, 3, 3, funct)
+        safe_passing(15, 2, 4, funct)
+        safe_passing(16, 3, 4, funct)
+        safe_passing(17, 4, 4, funct)
+
+def run_all_test_cases():
+    """
+    Runs the set of all available test cases.
+    """
+    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]:
         # Test 1
         left_right_test(1, funct)
         # Test 2
@@ -235,7 +269,7 @@ if __name__ == '__main__':
         hazard_test(9, 2, funct)
         hazard_test(10, 3, funct)
         hazard_test(11, 4, funct)
-        # Test 5 
+        # Test 5
         safe_intersection_priority(12, 2, 2, funct)
         safe_intersection_priority(13, 3, 3, funct)
         safe_intersection_priority(14, 4, 4, funct)
@@ -249,3 +283,101 @@ if __name__ == '__main__':
         join_platoon(20, 3, 3, 5, funct)
         join_platoon(21, 3, 4, 5, funct)
         join_platoon(22, 3, 5, 5, funct)
+
+def create_parser():
+    parser = argparse.ArgumentParser(description="Checker experiment runner")
+
+    # Mode flags
+    mode = parser.add_mutually_exclusive_group(required=False)
+    mode.add_argument("--quick", action="store_true", help="Run the quick reproduction subset")
+    mode.add_argument("--all", dest="run_all", action="store_true", help="Run the full experiment suite")
+
+    # Custom parameters (used only when neither --quick nor --all is passed)
+    parser.add_argument("--road_length", type=int, help="Road length for a custom test case")
+    parser.add_argument("--road_width", type=int, help="Road width for a custom test case")
+    parser.add_argument("--prop", dest="props", action="append", default=[], help="Proposition symbol (repeatable).")
+    parser.add_argument("--nom", dest="noms", action="append", default=[], help="Nominal symbol (repeatable).")
+    parser.add_argument("--assumptions", type=str, help="Path to assumptions file")
+    parser.add_argument("--conclusions", type=str, help="Path to conclusions file")
+    parser.add_argument("--max_trace_length", type=int, help="Maximum trace length")
+    parser.add_argument("--show_traces", type=int, choices=[0, 1], help="Whether to print traces (0/1)")
+    parser.add_argument("--checker", type=str, choices=["optimized", "baseline", "motion"], help="Checker implementation")
+
+    return parser
+
+def main():
+    parser = create_parser()
+    args = parser.parse_args()
+
+    # Mode A/B
+    if args.quick:
+        return run_quick_test_cases()
+    if args.run_all:
+        return run_all_test_cases()
+
+    # Mode C: custom run (validate required fields)
+    required = [
+        "road_length",
+        "road_width",
+        "assumptions",
+        "conclusions",
+        "max_trace_length",
+        "show_traces",
+        "checker",
+    ]
+
+    missing = [r for r in required if getattr(args, r) is None]
+    if missing:
+        parser.error(
+            "No mode selected. Use --quick or --all, OR provide a custom test case with: "
+            + " ".join(f"--{m} ..." for m in missing)
+        )
+
+    road_length = int(getattr(args, 'road_length'))
+    road_width = int(getattr(args, 'road_width'))
+    max_trace_length = int(getattr(args, 'max_trace_length'))
+
+    if int(getattr(args, 'max_trace_length')) == 1:
+        show_traces = True
+    else:
+        show_traces = False
+
+    if getattr(args, 'checker') == 'baseline':
+        checker = evaluate_baseline
+    elif getattr(args, 'checker') == 'optimized':
+        checker = evaluate_optimized1
+    else:
+        checker = evaluate_optimized2
+
+    path = Path(getattr(args, 'assumptions'))
+    assumptions = []
+
+    if not path.exists():
+        raise FileNotFoundError("Assumptions file not found.")
+
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            assumptions = [line.strip() for line in f if line.strip()]
+    except OSError:
+        raise RuntimeError("Error reading assumptions file.")
+
+    path = Path(getattr(args, 'conclusions'))
+    conclusions = []
+    if not path.exists():
+        raise FileNotFoundError("Conclusions file not found.")
+
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            conclusions = [line.strip() for line in f if line.strip()]
+    except OSError:
+        raise RuntimeError("Error reading assumptions file.")
+
+    if not conclusions:
+        raise ValueError("No conclusions found in the file.")
+
+    return run_evaluator(1, args.props, args.noms, assumptions, conclusions, (road_length, road_width), max_trace_length, show_traces, checker)
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+

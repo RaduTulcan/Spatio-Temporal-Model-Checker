@@ -1,15 +1,15 @@
 
-# Spatio-Temporal Model Checker
+# Hybrid Spatio-Temporal Model Checker
+**Paper Title:** Hybrid Spatio-Temporal Logic for Automotive Applications: Modeling and Model-Checking 
 
+**Authors:** Radu-Florin Tulcan, Rose Bohrer, Yoàv Montacute, Kevin Zhou, Yusuke Kawamoto, and Ichiro Hasuo
 
+## Description
 This project is the implementation of the model checker for the _Hybrid Spatio-Temporal Logic for
 Automotive Safety_. This file contains metadata about the implementation, information about the project structure,
 and about the parsable syntax of our logic. It also contains information about how the different versions of our model checker
 can be used, as well as some insights about the experiments conducted, which highlight the capabilities of our logic and model
 checker.
-
-## Project Metadata
-Python v3.9 has been used for the development of this project.
 
 ## Logic Syntax
 The syntax used here follows the one from the paper. The table below consists of the operators permitted and the corresponding symbols parsable by the model checker:
@@ -34,6 +34,9 @@ Names for nominals can be generated using the following regular expression `z[0-
 **Precedence relation:** The operators satisfy the following precedence relation: `↔ << → << | << ∧ << U << ¬, Left, Right, Back, Front, X, F, G, @, ↓`.
 
 
+## Project Metadata
+Python v3.9 has been used for the development of this project.
+
 ## Folder structure
 The project contains multiple folders. Their contents are summarized in the list below:
 
@@ -45,157 +48,38 @@ The project contains multiple folders. Their contents are summarized in the list
 
 
 ## Usage
-Our model checker (and all its versions) can be run in two ways. The simplest way is to run the
-already implemented experiments in `ExperimentRunner.py`. This file runs the pre-defined scenarios
-on all three versions of the model checker.
-
-On the other hand, the model checker can be run with custom formulas. To do so, consider the following 
-examples, which illustrate how our model checker can be used.
-
-
-### 1) Evaluate a formula with respect to a given trace and spatial point 
-
-
-```python
-from checkers.SpatioTemporalEvaluatorUtils import generate_trace_from_spec
-from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
-
-# list of propositions
-propositions = []
-
-# list of nominals
-nominals = ["z0", "z1"]
-
-# list of assumptions (restrict the traces and points of interest)
-assumptions: list[str] = ["@z1 !(Left 1)", "@z0 !(Back 1)"]
-
-# list of conclusions (formulas to be checked at all traces and spatial
-# points in which the assumptions hold)
-conclusions: list[str] = ["G(!(@z0 z1))"]
-
-# size of the spatial grid graph (n x m)
-grid_size: tuple[int, int] = (3, 3)
-
-# specification spatio-temporal trace
-# indexes of the matrix represent indexes for the spatial points
-# the strings at (i,j) represent the temporal evolution of that
-# spatial point
-#
-# Example:
-# [                                     [                        [
-#  ["a;b" ";"],   represents the trace    { "a": [(0,0)], ----->    "a" : [],
-#  ["b;"  ";"]                            "b": [(0,1)] }            "b": [(0,0)]
-# ]                                     ]                        ]
-trace_spec: list[list[str]] = [
-    [";;", ",;;z1,", ";;"],
-    [";;", ";z1;", ";;z0"],
-    [";;", "z1;;", "z0;z0;"]
-]
-
-# transform the input grid format into a trace
-trace: list[dict] = generate_trace_from_spec(trace_spec, grid_size)
-
-# spatial point in the grid
-point: tuple[int, int] = (0, 1)
-
-# conjunction of assumptions and conclusion
-input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
-
-# parse the input formula
-parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
-
-# retrieve result
-print("The formula ", parsed_formula, " evaluates to ", parsed_formula.evaluate(trace, point, grid_size), " at point ", point,
-      "\n")
+The checkers can be run using the following command:
 ```
-
-### 2) Evaluate formula with respect to a trace and retrieve the spatial points where the given formula holds (baseline only)
-
-```python
-from checkers.SpatioTemporalEvaluatorUtils import generate_trace_from_spec, satisfying_points
-from formula_types.HybridSpatioTemporalFormula import HybridSpatioTemporalFormula
-from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser, tokenize
-
-# list of propositions
-propositions = []
-
-# list of nominals
-nominals = ["z0", "z1"]
-
-# list of assumptions (restrict the traces and points of interest)
-assumptions: list[str] = ["@z1 !(Left 1)", "@z0 !(Back 1)"]
-
-# list of conclusions (formulas to be checked at all traces and spatial
-# points in which the assumptions hold)
-conclusions: list[str] = ["G(!(@z0 z1))"]
-
-# size of the spatial grid graph (n x m)
-grid_size: tuple[int, int] = (3, 3)
-
-# specification spatio-temporal trace
-# indexes of the matrix represent indexes for the spatial points
-# the strings at (i,j) represent the temporal evolution of that
-# spatial point
-#
-# Example:
-# [                                     [                        [
-#  ["a;b" ";"],   represents the trace    { "a": [(0,0)], ----->    "a" : [],
-#  ["b;"  ";"]                            "b": [(0,1)] }            "b": [(0,0)]
-# ]                                     ]                        ]
-trace_spec: list[list[str]] = [
-    [";;", ",;;z1,", ";;"],
-    [";;", ";z1;", ";;z0"],
-    [";;", "z1;;", "z0;z0;"]
-]
-
-# transform the input grid format into a trace
-trace: list[dict] = generate_trace_from_spec(trace_spec, grid_size)
-
-# conjunction of assumptions and conclusion
-input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
-
-# parse the input formula
-parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
-
-# retrieve result
-print("The formula ", parsed_formula, " is true at the following spatial points w.r.t. the given trace:",
-      satisfying_points(parsed_formula, trace, grid_size), '\n')
+docker run --rm paper-artifact:latest python ExperimentRunner.py [-h] [--quick | --all] [--road_length ROAD_LENGTH] [--road_width ROAD_WIDTH] [--prop PROPS] [--nom NOMS]
+                           [--assumptions ASSUMPTIONS] [--conclusions CONCLUSIONS] [--max_trace_length MAX_TRACE_LENGTH] [--show_traces {0,1}]      
+                           [--checker {optimized,baseline,motion}]
 ```
+We allow three modes of operation:
+- ``quick``: this mode runs the test suit with the smaller test cases, totalling a run-time of around 20 minutes
+- ``all``: this mode runs all test cases included in the paper, with an approximate run-time of around 3.5 - 4 hours
+- custom mode: this mode allows custom experimentation of our model checkers using the following parameters
+  - ``road_length`` (positive number): the length of the grid structure
+  - ``road_width`` (positive number): the width of the grid structure
+  - ``prop`` (string): a proposition used in the custom formulas. This argument can occur multiple times.
+  - ``assumptions`` (string): a path to a file containing the formulas used as assumptions, where each formula is written in a separate line. For convenient usage, the artifact contains a file ``assumptions.txt`` that can be used as input.
+  - ``conclusions`` (string): a path to a file containing the formulas used as conclusion, where each formula is written in a separate line. For convenient usage, the artifact contains a file ``assumptions.txt`` that can be used as input.
+  - ``max_trace_length`` (positive number): maximal length of traces that the checker should evaluate the formulas against
+  - ``show_traces`` (0/1): whether the satisfying traces should be displayed in the commandline or not
+  - ``checker`` (optimized/baseline/motion): the checker version
 
-### 3) Retrieve traces and the spatial points inside the trace in which the given formula holds
-
-```python
-from checkers.baseline_version.evaluator_baseline.BaselineSpatioTemporalEvaluator import evaluate as evaluate_baseline
-from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator1 import evaluate as evaluate_optimized1
-from checkers.optimized_version.evaluator_optimized.OptimizedSpatioTemporalEvaluator2 import evaluate as evaluate_optimized2
-
-# list of propositions
-propositions = []
-
-# list of nominals
-nominals = ["z0", "z1"]
-
-# list of assumptions (restrict the traces and points of interest)
-assumptions: list[str] = ["@z1 !(Left 1)", "@z0 !(Back 1)"]
-
-# list of conclusions (formulas to be checked at all traces and spatial
-# points in which the assumptions hold)
-conclusions: list[str] = ["G(!(@z0 z1))"]
-
-# size of the spatial grid graph (n x m)
-grid_size: tuple[int, int] = (3, 3)
-
-# call the baseline model checker
-evaluate_baseline(propositions, nominals, assumptions, conclusions, grid_size, 2, True)
-
-# call the optimized model checker (v1)
-evaluate_optimized1(propositions, nominals, assumptions, conclusions, grid_size, 2, True)
-
-# call the optimized model checker (v2)
-evaluate_optimized2(propositions, nominals, assumptions, conclusions, grid_size, 2, True)
+**Example:** 
 ```
-
+docker run --rm paper-artifact:latest python ExperimentRunner.py \
+    --road_length 2 \
+    --road_width 3 \
+    --prop a \
+    --prop b \
+    --assumptions assumptions.txt \
+    --conclusions conclusions.txt \
+    --max_trace_length 3 \
+    --show_traces 1 \
+    --checker optimized 
+```
 
 ## Experiments
 The file `ExperimentRunner.py` contains the experiments conducted for our paper. This section will go over the experiments in detail.
@@ -260,7 +144,7 @@ In this scenario we also check for non-collision, expressed by `G(!(@z0 z1))`.
 Helps demonstrate the value of optimizing one vehicle when the other clearly cannot be optimized
 (though we have other tests which demonstrate that same point).
 
-# Join Platoon
+### Join Platoon
 In this scenario, a platoon of POV cars are all traveling at constant speed. The SV is trying to join the platoon. 
 It can join the platoon by switching lanes if the resulting position is both behind a car of the platoon and is safe.
 Here, `z0` is SV and `z1-zn` are the n POVs. In the following, we write `|i in [1..n] P(i)` for an n-ary disjunction.
