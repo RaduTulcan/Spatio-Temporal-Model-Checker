@@ -612,5 +612,5 @@ def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusi
                 print("\t |", t, "\n")
             counter_sat = counter_sat + 1
         counter_gen = counter_gen + 1
-    print("|A total of ", counter_gen, " generated.")
-    print("|A total of ", counter_sat, " satisfying traces found.")
+    print("|Sat:", counter_gen)
+    print("|TraceX:", counter_sat)

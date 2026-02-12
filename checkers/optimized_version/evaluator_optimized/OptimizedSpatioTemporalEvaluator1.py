@@ -75,7 +75,7 @@ def generate_traces(props: list[str], noms: list[str], max_trace_length: int, gr
     # consider only grids that satisfy state assumptions
     grids: list[dict] = generate_all_satisfying_grids(props, noms, grid_size, parsed_state_formulas)
 
-    print("|Total amount of grids generated:", len(grids))
+    #print("|Total amount of grids generated:", len(grids))
 
     # generate all traces with the available grids and up to the given length
     for length in range(1, max_trace_length + 1):
@@ -144,5 +144,5 @@ def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length,
             counter_sat = counter_sat + 1
         counter_gen = counter_gen + 1
 
-    print("|A total of ", counter_gen, "traces generated.")
-    print("|A total of ", counter_sat, " satisfying traces found.")
+    print("|Sat:", counter_gen)
+    print("|TraceX:", counter_sat)

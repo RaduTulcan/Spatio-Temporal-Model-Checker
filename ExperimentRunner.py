@@ -33,7 +33,7 @@ def evaluate_handler(propositions: list[str], nominals: list[str], assumptions: 
     start: float = timer()
     evaluate(propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces)
     end: float = timer()
-    print("|Time elapsed:", end - start, "\n")
+    print("|TimeX:", end - start, "\n")
 
 
 def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], assumptions: list[str],
@@ -60,14 +60,11 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
     # parse the input formula
     parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
 
-    print("| Run ", run_id, " started")
+    print("| Test ", run_id, " started")
     print("|--------------------")
-    print("|Number of propositions:", len(propositions))
-    print("|Number of nominals:", len(nominals))
-    print("|Formula to check:", parsed_formula)
-    print("|Grid size:", grid_size)
-    print("|Maximal trace length:", trace_max_length)
-
+    print("|[Not in Table 1]Formula to check:", parsed_formula)
+    print("|Noms:" + str(len(nominals))+",Grid:"+str(grid_size)+",Len:"+str(trace_max_length))
+    
     # evaluate formula and return traces and points where the formula holds
     p = multiprocessing.Process(target=evaluate_handler, args=(
         propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces, evaluator_function))
@@ -230,11 +227,16 @@ def global_soundness(test_index: int, duration: int, evaluator_function: Callabl
     run_evaluator(test_index, [], ["z0"], ["G !(Left 1)"], ["1"], (2, 2), duration, False, evaluator_function)
 
 
+BAR_STR = "###########################################################"
+EVALUATORS = [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]
+EVALUATOR_MSGS = ["Running BASELINE algorithm (columns TraceX=Trace1, TimeX=Time1)", "Running OPTIMIZED algorithm (columns TraceX=Trace2, TimeX=Time2)", "Running MOTION algorithm (columns TraceX=Trace3, TimeX=Time3)"]
+
 def run_quick_test_cases():
     """
     Runs the set of fast test cases.
     """
-    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]:
+    for msg, funct in zip(EVALUATOR_MSGS, EVALUATORS):
+        print("", BAR_STR, "\n#", msg, "\n", BAR_STR)
         left_right_test(1, funct)
         same_name_test(2, funct)
         one_lane_follow_test(3, 3, 3, funct)
@@ -253,7 +255,8 @@ def run_all_test_cases():
     """
     Runs the set of all available test cases.
     """
-    for funct in [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]:
+    for msg, funct in zip(EVALUATOR_MSGS, EVALUATORS):
+        print(BAR_STR, msg, BAR_STR)
         # Test 1
         left_right_test(1, funct)
         # Test 2
