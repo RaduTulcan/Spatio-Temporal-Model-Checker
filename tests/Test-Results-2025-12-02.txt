@@ -1,0 +1,994 @@
+=====================================================================================================
+=======================  BASELINE ===================================================================
+=====================================================================================================
+
+| Run  1  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 1
+|Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 0.02825839997967705
+
+| Run  2  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: G(@z z1)
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 2.3575324999983422
+
+| Run  3  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  9  satisfying traces found.
+|Time elapsed: 0.01183520001359284
+
+| Run  4  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (6, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 36
+|A total of  47988 traces generated.
+|A total of  30  satisfying traces found.
+|Time elapsed: 0.9232917000190355
+
+| Run  5  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (9, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  51  satisfying traces found.
+|Time elapsed: 14.700195100042038
+
+| Run  6  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (12, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 144
+|A total of  3006864 traces generated.
+|A total of  72  satisfying traces found.
+|Time elapsed: 183.92429210001137
+
+| Run  7  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (15, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 225
+=====================   TIMED OUT ===========================
+| Run  8  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (18, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 324
+=====================   TIMED OUT ===========================
+| Run  9  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 16
+|A total of  272 traces generated.
+|A total of  6  satisfying traces found.
+|Time elapsed: 0.02161049999995157
+
+| Run  10  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  24  satisfying traces found.
+|Time elapsed: 26.918673000007402
+
+| Run  11  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (4, 4)
+|Maximal trace length: 4
+|Total amount of grids generated: 256
+=====================   TIMED OUT ===========================
+| Run  12  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 64
+|A total of  4160 traces generated.
+|A total of  5  satisfying traces found.
+|Time elapsed: 0.20307230000616983
+
+| Run  13  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 64
+|A total of  266304 traces generated.
+|A total of  17  satisfying traces found.
+|Time elapsed: 11.107120700005908
+
+| Run  14  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 4
+|Total amount of grids generated: 64
+|A total of  17043520 traces generated.
+|A total of  21  satisfying traces found.
+|Time elapsed: 449.247005000012
+
+| Run  15  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 5
+|Total amount of grids generated: 64
+=====================   TIMED OUT ===========================
+| Run  16  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 3
+|Formula to check: ((((((G(@z0(¬(z1 | z2)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((Front z1) | (Front z2)) ∧ (Right z)) ∧ (¬(z1 | z2))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 1000
+=====================   TIMED OUT ===========================
+| Run  17  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 4
+|Formula to check: ((((((((G(@z0(¬((z1 | z2) | z3)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((Front z1) | (Front z2)) | (Front z3)) ∧ (Right z)) ∧ (¬((z1 | z2) | z3))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 10000
+=====================   TIMED OUT ===========================
+| Run  18  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 5
+|Formula to check: ((((((((((G(@z0(¬(((z1 | z2) | z3) | z4)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) ∧ (Right z)) ∧ (¬(((z1 | z2) | z3) | z4))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 100000
+=====================   TIMED OUT ===========================
+| Run  19  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 6
+|Formula to check: ((((((((((((G(@z0(¬((((z1 | z2) | z3) | z4) | z5)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) | (Front z5)) ∧ (Right z)) ∧ (¬((((z1 | z2) | z3) | z4) | z5))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z5(↓z((¬(X ⊤)) | (X(@z5(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))) ∧ (G(@z5(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 1000000
+=====================   TIMED OUT ===========================
+
+=====================================================================================================
+=======================OPTIMIZED 1===================================================================
+=====================================================================================================
+
+
+| Run  1  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 1
+|Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 3
+|A total of  39 traces generated.
+|A total of  39  satisfying traces found.
+|Time elapsed: 0.0041680000140331686
+
+| Run  2  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: G(@z z1)
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 0.01175509998574853
+
+| Run  3  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 6
+|A total of  258 traces generated.
+|A total of  9  satisfying traces found.
+|Time elapsed: 0.014405500027351081
+
+| Run  4  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (6, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 30
+|A total of  27930 traces generated.
+|A total of  30  satisfying traces found.
+|Time elapsed: 2.105234900023788
+
+| Run  5  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (9, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 72
+|A total of  378504 traces generated.
+|A total of  51  satisfying traces found.
+|Time elapsed: 12.273106799984816
+
+| Run  6  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (12, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 132
+|A total of  2317524 traces generated.
+|A total of  72  satisfying traces found.
+|Time elapsed: 92.25554149999516
+
+| Run  7  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (15, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 210
+|A total of  9305310 traces generated.
+|A total of  93  satisfying traces found.
+|Time elapsed: 646.08947180002
+
+| Run  8  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (18, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 306
+=====================   TIMED OUT ===========================
+| Run  9  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 12
+|A total of  156 traces generated.
+|A total of  6  satisfying traces found.
+|Time elapsed: 0.025694400013890117
+
+| Run  10  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 72
+|A total of  378504 traces generated.
+|A total of  24  satisfying traces found.
+|Time elapsed: 66.15611099998932
+
+| Run  11  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (4, 4)
+|Maximal trace length: 4
+|Total amount of grids generated: 240
+=====================   TIMED OUT ===========================
+| Run  12  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 28
+|A total of  812 traces generated.
+|A total of  5  satisfying traces found.
+|Time elapsed: 0.18722249998245388
+
+| Run  13  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 28
+|A total of  22764 traces generated.
+|A total of  17  satisfying traces found.
+|Time elapsed: 3.363059199997224
+
+| Run  14  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 4
+|Total amount of grids generated: 28
+|A total of  637420 traces generated.
+|A total of  21  satisfying traces found.
+|Time elapsed: 173.59439819998806
+
+| Run  15  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 5
+|Total amount of grids generated: 28
+=====================   TIMED OUT ===========================
+| Run  16  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 3
+|Formula to check: ((((((G(@z0(¬(z1 | z2)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((Front z1) | (Front z2)) ∧ (Right z)) ∧ (¬(z1 | z2))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 205
+=====================   TIMED OUT ===========================
+| Run  17  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 4
+|Formula to check: ((((((((G(@z0(¬((z1 | z2) | z3)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((Front z1) | (Front z2)) | (Front z3)) ∧ (Right z)) ∧ (¬((z1 | z2) | z3))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 945
+=====================   TIMED OUT ===========================
+| Run  18  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 5
+|Formula to check: ((((((((((G(@z0(¬(((z1 | z2) | z3) | z4)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) ∧ (Right z)) ∧ (¬(((z1 | z2) | z3) | z4))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 4405
+=====================   TIMED OUT ===========================
+| Run  19  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 6
+|Formula to check: ((((((((((((G(@z0(¬((((z1 | z2) | z3) | z4) | z5)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) | (Front z5)) ∧ (Right z)) ∧ (¬((((z1 | z2) | z3) | z4) | z5))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z5(↓z((¬(X ⊤)) | (X(@z5(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))) ∧ (G(@z5(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 20745
+=====================   TIMED OUT ===========================
+
+
+
+=====================================================================================================
+=======================OPTIMIZED 2===================================================================
+=====================================================================================================
+
+
+| Run  1  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 1
+|Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|A total of  819  generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 0.029154200048651546
+
+| Run  2  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: G(@z z1)
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|A total of  538083  generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 5.847189199994318
+
+| Run  3  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 1)
+|Maximal trace length: 3
+|A total of  270  generated.
+|A total of  9  satisfying traces found.
+|Time elapsed: 0.007326900027692318
+
+| Run  4  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (6, 1)
+|Maximal trace length: 3
+|A total of  4752  generated.
+|A total of  30  satisfying traces found.
+|Time elapsed: 0.20313829998485744
+
+| Run  5  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (9, 1)
+|Maximal trace length: 3
+|A total of  24786  generated.
+|A total of  51  satisfying traces found.
+|Time elapsed: 1.27656070003286
+
+| Run  6  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (12, 1)
+|Maximal trace length: 3
+|A total of  79488  generated.
+|A total of  72  satisfying traces found.
+|Time elapsed: 5.12068019999424
+
+| Run  7  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (15, 1)
+|Maximal trace length: 3
+|A total of  195750  generated.
+|A total of  93  satisfying traces found.
+|Time elapsed: 15.190476100018714
+
+| Run  8  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (18, 1)
+|Maximal trace length: 3
+|A total of  408240  generated.
+|A total of  114  satisfying traces found.
+|Time elapsed: 37.812559799989685
+
+| Run  9  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|A total of  48  generated.
+|A total of  6  satisfying traces found.
+|Time elapsed: 0.007715600018855184
+
+| Run  10  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|A total of  2754  generated.
+|A total of  24  satisfying traces found.
+|Time elapsed: 0.226195800001733
+
+| Run  11  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (4, 4)
+|Maximal trace length: 4
+|A total of  298240  generated.
+|A total of  60  satisfying traces found.
+|Time elapsed: 44.513192799990065
+
+| Run  12  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 2
+|A total of  480  generated.
+|A total of  5  satisfying traces found.
+|Time elapsed: 0.03853329998673871
+
+| Run  13  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 3
+|A total of  6624  generated.
+|A total of  17  satisfying traces found.
+|Time elapsed: 0.49689549999311566
+
+| Run  14  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) | Run  1  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 1
+|Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 0.028282599989324808
+
+| Run  2  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: G(@z z1)
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 2.338143700035289
+
+| Run  3  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  9  satisfying traces found.
+|Time elapsed: 0.011269300011917949
+
+| Run  4  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (6, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 36
+|A total of  47988 traces generated.
+|A total of  30  satisfying traces found.
+|Time elapsed: 0.9264061000430956
+
+| Run  5  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (9, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  51  satisfying traces found.
+|Time elapsed: 14.15888439991977
+
+| Run  6  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (12, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 144
+|A total of  3006864 traces generated.
+|A total of  72  satisfying traces found.
+|Time elapsed: 101.5468260999769
+
+| Run  7  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (15, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 225
+|A total of  11441475 traces generated.
+|A total of  93  satisfying traces found.
+|Time elapsed: 13935.841676800046
+
+| Run  8  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (18, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 324
+=====================   TIMED OUT ===========================
+| Run  9  started
+|--------------------
+|Number of propositions: 1
+|Number of nominals: 2
+|Formula to check: (@z0(↓z2(((¬(X ⊤)) | (X(@z0((Back z2) ∧ (G(¬ h)))))) U (X(@z0((((Front z1) | (Front(Front z1))) ∧ (Left z2)) ∧ (((Front ⊤) → (Front(G(¬ h)))) ∧ ((Front(Front ⊤)) → (Front(Front(G(¬ h)))))))))))) ∧ (@z0((Right z1) ∧ ((Front(G h)) | (Front(Front(G h))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 256
+|A total of  65792 traces generated.
+|A total of  32  satisfying traces found.
+|Time elapsed: 5.62700869992841
+
+| Run  10  started
+|--------------------
+|Number of propositions: 1
+|Number of nominals: 2
+|Formula to check: (@z0(↓z2(((¬(X ⊤)) | (X(@z0((Back z2) ∧ (G(¬ h)))))) U (X(@z0((((Front z1) | (Front(Front z1))) ∧ (Left z2)) ∧ (((Front ⊤) → (Front(G(¬ h)))) ∧ ((Front(Front ⊤)) → (Front(Front(G(¬ h)))))))))))) ∧ (@z0((Right z1) ∧ ((Front(G h)) | (Front(Front(G h))))))
+|Grid size: (2, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 256
+=====================   TIMED OUT ===========================
+| Run  11  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 16
+|A total of  272 traces generated.
+|A total of  6  satisfying traces found.
+|Time elapsed: 0.013823000015690923
+
+| Run  12  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (4, 4)
+|Maximal trace length: 4
+|Total amount of grids generated: 256
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|Grid size: (4, 2)
+|Maximal trace length: 4
+|A total of  88544  generated.
+|A total of  21  satisfying traces found.
+|Time elapsed: 6.483355600037612
+
+| Run  15  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((((G(¬(@z0 z1))) ∧ (G(@z1(¬(Right ⊤))))) ∧ (@z0(¬(Right ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))) U ((@z0(↓z2((Front z1) ∧ ((¬(X ⊤)) | (X(@z0(Back(Right z2)))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) ∧ ((¬(X ⊤)) | (X((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Back z2))))))) U ((@z0(↓z2((¬(X ⊤)) | (X(@z0(Back(Left z2))))))) ∧ ((¬(X ⊤)) | (X(G(@z0(↓z2((¬(X ⊤)) | (X(@z0(Back z2)))))))))))))))))) 
+|Grid size: (4, 2)
+|Maximal trace length: 5
+|A total of  1137120  generated.
+|A total of  21  satisfying traces found.
+|Time elapsed: 83.741464599967
+
+| Run  16  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 3
+|Formula to check: ((((((G(@z0(¬(z1 | z2)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((Front z1) | (Front z2)) ∧ (Right z)) ∧ (¬(z1 | z2))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|A total of  10850  generated.
+|A total of  260  satisfying traces found.
+|Time elapsed: 1.7467305999598466
+
+| Run  17  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 4
+|Formula to check: ((((((((G(@z0(¬((z1 | z2) | z3)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((Front z1) | (Front z2)) | (Front z3)) ∧ (Right z)) ∧ (¬((z1 | z2) | z3))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|A total of  34650  generated.
+|A total of  1122  satisfying traces found.
+|Time elapsed: 6.66133799997624
+
+| Run  18  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 5
+|Formula to check: ((((((((((G(@z0(¬(((z1 | z2) | z3) | z4)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | ((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) ∧ (Right z)) ∧ (¬(((z1 | z2) | z3) | z4))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|A total of  112850  generated.
+|A total of  4952  satisfying traces found.
+|Time elapsed: 25.47897620004369
+
+| Run  19  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 6
+|Formula to check: ((((((((((((G(@z0(¬((((z1 | z2) | z3) | z4) | z5)))) ∧ (@z0(¬(Right ⊤)))) ∧ (G(@z0(↓z((¬(X ⊤)) | (X(@z0((Back z) | (((((((Front z1) | (Front z2)) | (Front z3)) | (Front z4)) | (Front z5)) ∧ (Right z)) ∧ (¬((((z1 | z2) | z3) | z4) | z5))))))))))) ∧ (G(@z1(↓z((¬(X ⊤)) | (X(@z1(Back z)))))))) ∧ (G(@z2(↓z((¬(X ⊤)) | (X(@z2(Back z)))))))) ∧ (G(@z3(↓z((¬(X ⊤)) | (X(@z3(Back z)))))))) ∧ (G(@z4(↓z((¬(X ⊤)) | (X(@z4(Back z)))))))) ∧ (G(@z5(↓z((¬(X ⊤)) | (X(@z5(Back z)))))))) ∧ (G(@z1(¬(Left ⊤))))) ∧ (G(@z2(¬(Left ⊤))))) ∧ (G(@z3(¬(Left ⊤))))) ∧ (G(@z4(¬(Left ⊤))))) ∧ (G(@z5(¬(Left ⊤))))
+|Grid size: (5, 2)
+|Maximal trace length: 3
+|A total of  376650  generated.
+|A total of  22410  satisfying traces found.
+|Time elapsed: 101.45097429997986
+
+
+
+
+
+
+
+
+
+| Run  1  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 1
+|Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 0.028282599989324808
+
+| Run  2  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: G(@z z1)
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  819  satisfying traces found.
+|Time elapsed: 2.338143700035289
+
+| Run  3  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 9
+|A total of  819 traces generated.
+|A total of  9  satisfying traces found.
+|Time elapsed: 0.011269300011917949
+
+| Run  4  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (6, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 36
+|A total of  47988 traces generated.
+|A total of  30  satisfying traces found.
+|Time elapsed: 0.9264061000430956
+
+| Run  5  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (9, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|A total of  538083 traces generated.
+|A total of  51  satisfying traces found.
+|Time elapsed: 14.15888439991977
+
+| Run  6  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (12, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 144
+|A total of  3006864 traces generated.
+|A total of  72  satisfying traces found.
+|Time elapsed: 101.5468260999769
+
+| Run  7  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (15, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 225
+|A total of  11441475 traces generated.
+|A total of  93  satisfying traces found.
+|Time elapsed: 13935.841676800046
+
+| Run  8  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: (((G(¬(@z0 z1))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(z2 | (Back z2))))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (18, 1)
+|Maximal trace length: 3
+|Total amount of grids generated: 324
+=====================   TIMED OUT ===========================
+| Run  9  started
+|--------------------
+|Number of propositions: 1
+|Number of nominals: 2
+|Formula to check: (@z0(↓z2(((¬(X ⊤)) | (X(@z0((Back z2) ∧ (G(¬ h)))))) U (X(@z0((((Front z1) | (Front(Front z1))) ∧ (Left z2)) ∧ (((Front ⊤) → (Front(G(¬ h)))) ∧ ((Front(Front ⊤)) → (Front(Front(G(¬ h)))))))))))) ∧ (@z0((Right z1) ∧ ((Front(G h)) | (Front(Front(G h))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 256
+|A total of  65792 traces generated.
+|A total of  32  satisfying traces found.
+|Time elapsed: 5.62700869992841
+
+| Run  10  started
+|--------------------
+|Number of propositions: 1
+|Number of nominals: 2
+|Formula to check: (@z0(↓z2(((¬(X ⊤)) | (X(@z0((Back z2) ∧ (G(¬ h)))))) U (X(@z0((((Front z1) | (Front(Front z1))) ∧ (Left z2)) ∧ (((Front ⊤) → (Front(G(¬ h)))) ∧ ((Front(Front ⊤)) → (Front(Front(G(¬ h)))))))))))) ∧ (@z0((Right z1) ∧ ((Front(G h)) | (Front(Front(G h))))))
+|Grid size: (2, 2)
+|Maximal trace length: 3
+|Total amount of grids generated: 256
+=====================   TIMED OUT ===========================
+| Run  11  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (2, 2)
+|Maximal trace length: 2
+|Total amount of grids generated: 16
+|A total of  272 traces generated.
+|A total of  6  satisfying traces found.
+|Time elapsed: 0.013823000015690923
+
+| Run  12  started
+|--------------------
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (3, 3)
+|Maximal trace length: 3
+|Total amount of grids generated: 81
+|Number of propositions: 0
+|Number of nominals: 2
+|Formula to check: ((((G(¬(@z0 z1))) ∧ (@z1(¬(Left ⊤)))) ∧ (@z0(¬(Back ⊤)))) ∧ (G(@z1(↓z2((¬(X ⊤)) | (X(@z1(Left z2)))))))) ∧ (G(@z0(↓z2((¬(X ⊤)) | (X(@z0(((¬ z1) ∧ (Back z2)) | (z2 ∧ (Front z1)))))))))
+|Grid size: (4, 4)
+|Maximal trace length: 4
+|Total amount of grids generated: 256
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
