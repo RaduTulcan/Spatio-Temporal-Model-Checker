@@ -575,7 +575,7 @@ def extend_trace(grid_size: tuple[int, int], propositions: list[str], static_car
 
 def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusions, grid_size: tuple[int, int],
              max_trace_length: int,
-             show_traces: bool):
+             show_traces: bool) -> (int, int):
     """
     Evaluates the given formulas against all generated traces.
 
@@ -612,5 +612,5 @@ def evaluate(propositions: list[str], nominals: list[str], assumptions, conclusi
                 print("\t |", t, "\n")
             counter_sat = counter_sat + 1
         counter_gen = counter_gen + 1
-    print("|Sat:", counter_gen)
-    print("|TraceX:", counter_sat)
+
+    return counter_sat, counter_gen

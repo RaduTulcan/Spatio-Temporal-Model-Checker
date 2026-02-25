@@ -16,11 +16,12 @@ from parsers.HybridSpatioTemporalFormulaParser import HybridSpatioTemporalParser
 import argparse
 
 
-def evaluate_handler(propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str],
+def evaluate_handler(queue: multiprocessing.Queue, propositions: list[str], nominals: list[str], assumptions: list[str], conclusions: list[str],
                      grid_size: tuple[int, int], trace_max_length: int, show_traces: bool, evaluate: Callable):
     """
     Runs the evaluation function of the model checker.
 
+   :param queue: stores the metadata of the run
    :param propositions: the list of propositions used in the formula
    :param nominals: the list of nominals used in the formula
    :param assumptions: the list of formulas used as assumptions
@@ -31,9 +32,12 @@ def evaluate_handler(propositions: list[str], nominals: list[str], assumptions: 
    :param evaluate: model checker evaluation function
    """
     start: float = timer()
-    evaluate(propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces)
+    counter_sat, counter_gen = evaluate(propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces)
     end: float = timer()
-    print("|TimeX:", end - start, "\n")
+    timeX = end - start
+
+    queue.put((counter_sat, counter_gen, timeX))
+    #print("|TimeX:", end - start, "\n")
 
 
 def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], assumptions: list[str],
@@ -54,26 +58,19 @@ def run_evaluator(run_id: int, propositions: list[str], nominals: list[str], ass
    """
     TIMEOUT = 600
 
-    # conjunction of assumptions and conclusion
-    input_formula_string: str = "&".join([*("(" + x + ")" for x in conclusions), *("(" + x + ")" for x in assumptions)])
-
-    # parse the input formula
-    parsed_formula: HybridSpatioTemporalFormula = HybridSpatioTemporalParser(tokenize(input_formula_string)).parse()
-
-    print("| Test ", run_id, " started")
-    print("|--------------------")
-    print("|[Not in Table 1]Formula to check:", parsed_formula)
-    print("|Noms:" + str(len(nominals))+",Grid:"+str(grid_size)+",Len:"+str(trace_max_length))
-    
+    queue = multiprocessing.Queue()
     # evaluate formula and return traces and points where the formula holds
     p = multiprocessing.Process(target=evaluate_handler, args=(
-        propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces, evaluator_function))
+        queue, propositions, nominals, assumptions, conclusions, grid_size, trace_max_length, show_traces, evaluator_function))
     p.start()
     p.join(TIMEOUT)
     if p.is_alive():
-        print("=====================   TIMED OUT ===========================")
         p.terminate()
         p.join()
+        return run_id, len(nominals), grid_size, trace_max_length, '-', '-', '-'
+    else:
+        sat, gen, time = queue.get()
+        return run_id, len(nominals), grid_size, trace_max_length, sat, gen, time
 
 
 def left_right_test(test_index: int, evaluator_function: Callable):
@@ -83,7 +80,7 @@ def left_right_test(test_index: int, evaluator_function: Callable):
    :param test_index: test index
    :param evaluator_function: function of the checker for evaluating the formula
    """
-    run_evaluator(test_index, [], ['z'], [], ["G(Left(Right(z)) <-> Right(Left(z)))"], (3, 3), 3, False,
+    return run_evaluator(test_index, [], ['z'], [], ["G(Left(Right(z)) <-> Right(Left(z)))"], (3, 3), 3, False,
                   evaluator_function)
 
 
@@ -95,7 +92,7 @@ def same_name_test(test_index: int, evaluator_function: Callable):
    :param evaluator_function: function of the checker for evaluating the formula
    :return:
    """
-    run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False, evaluator_function)
+    return run_evaluator(test_index, [], ['z', 'z1'], [], ["G (@z z1)"], (3, 3), 3, False, evaluator_function)
 
 
 def one_lane_follow_test(test_index: int, duration: int, road_length: int, evaluator_function: Callable):
@@ -108,7 +105,7 @@ def one_lane_follow_test(test_index: int, duration: int, road_length: int, evalu
     :param road_length: length of the one-lane road
     :param evaluator_function: function of the checker for evaluating the formula
     """
-    run_evaluator(test_index, [], ['z0', 'z1'],
+    return run_evaluator(test_index, [], ['z0', 'z1'],
                   ["@z0 !(Back 1)",  # SV is initially at the start of the lane
                    "G (@z1 ↓z2 ((! X 1) | X @z1  (z2 | Back z2)))",  # POV always moves forward or stays put
                    "G (@z0 ↓z2 ((! X 1) | X (@z0 ((!z1 & Back z2 ) | (z2 & Front z1) ))))"],
@@ -146,7 +143,7 @@ def hazard_test(test_index: int, duration: int, evaluator_function: Callable):
     p2 = "(@z0 ↓z2 X @z0 ((Back z2) & (G ! h)))"
     p3 = "(@z0 ↓z2 X @z0((Left z2) & {} & {}))".format(dfront("z1"), bfront("G ! h"))
     full = "@z0 (({}) & (({}) U ({})))".format(p1, p2, p3)
-    run_evaluator(test_index, ["h"], ["z0", "z1"], [], [full], (length, width), duration, False, evaluator_function)
+    return run_evaluator(test_index, ["h"], ["z0", "z1"], [], [full], (length, width), duration, False, evaluator_function)
 
 
 def safe_intersection_priority(test_index: int, duration: int, grid_size: int, evaluator_function: Callable):
@@ -159,7 +156,7 @@ def safe_intersection_priority(test_index: int, duration: int, grid_size: int, e
     :param road_length: width and length of the road
     :param evaluator_function: function of the checker for evaluating the formula
     """
-    run_evaluator(test_index, [], ['z0', 'z1'],
+    return run_evaluator(test_index, [], ['z0', 'z1'],
                   ["@z1 !(Left 1)",  # z1 starts somewhere on the left border
                    "@z0 !(Back 1)",  # z0 starts somewhere on the bottom border
                    "G (@z1 ↓z2 ((! X 1)| X @z1 (Left z2)))",  # Moves left-to-right always
@@ -188,7 +185,7 @@ def safe_passing(test_index: int, duration: int, road_length: int, evaluator_fun
     dodge_right = "(@z0 ↓z2 ((! X 1)| X @z0 (Back (Left z2))))"
     # then drives normally
     last_forward = "(@z0 ↓z2 ((! X 1) | X @z0 (Back z2)))"
-    run_evaluator(test_index, [], ['z0', 'z1'],
+    return run_evaluator(test_index, [], ['z0', 'z1'],
                   ["G(@z1 !(Right 1))",  # POV starts anywhere in right lane, stays in right lane
                    "@z0 !(Right 1)",  # SV starts in back of right lane
                    "@z0 !(Back 1)",
@@ -220,72 +217,146 @@ def join_platoon(test_index: int, duration: int, platoon_size: int, road_length:
                        range(platoon_size)]
     assumps = [sv_start_assump, sv_mov_assump] + pov_mov_assumps + pov_start_assumps
     postcond = "G(@z0 ({}))".format(no_collide)
-    run_evaluator(test_index, [], noms, assumps, [postcond], (road_length, 2), duration, False, evaluator_function)
+    return run_evaluator(test_index, [], noms, assumps, [postcond], (road_length, 2), duration, False, evaluator_function)
 
 
 def global_soundness(test_index: int, duration: int, evaluator_function: Callable):
-    run_evaluator(test_index, [], ["z0"], ["G !(Left 1)"], ["1"], (2, 2), duration, False, evaluator_function)
+    return run_evaluator(test_index, [], ["z0"], ["G !(Left 1)"], ["1"], (2, 2), duration, False, evaluator_function)
 
 
-BAR_STR = "###########################################################"
+#BAR_STR = "###########################################################"
 EVALUATORS = [evaluate_baseline, evaluate_optimized1, evaluate_optimized2]
-EVALUATOR_MSGS = ["Running BASELINE algorithm (columns TraceX=Trace1, TimeX=Time1)", "Running OPTIMIZED algorithm (columns TraceX=Trace2, TimeX=Time2)", "Running MOTION algorithm (columns TraceX=Trace3, TimeX=Time3)"]
+#EVALUATOR_MSGS = ["Running BASELINE algorithm (columns TraceX=Trace1, TimeX=Time1)", "Running OPTIMIZED algorithm (columns TraceX=Trace2, TimeX=Time2)", "Running MOTION algorithm (columns TraceX=Trace3, TimeX=Time3)"]
+
 
 def run_quick_test_cases():
     """
     Runs the set of fast test cases.
     """
-    for msg, funct in zip(EVALUATOR_MSGS, EVALUATORS):
-        print("", BAR_STR, "\n#", msg, "\n", BAR_STR)
-        left_right_test(1, funct)
-        same_name_test(2, funct)
-        one_lane_follow_test(3, 3, 3, funct)
-        one_lane_follow_test(4, 3, 6, funct)
-        one_lane_follow_test(5, 3, 9, funct)
-        one_lane_follow_test(6, 3, 12, funct)
-        hazard_test(9, 2, funct)
-        hazard_test(10, 3, funct)
-        safe_intersection_priority(12, 2, 2, funct)
-        safe_intersection_priority(13, 3, 3, funct)
-        safe_passing(15, 2, 4, funct)
-        safe_passing(16, 3, 4, funct)
-        safe_passing(17, 4, 4, funct)
+    tests = [
+        lambda f: left_right_test(1, f),
+        lambda f: same_name_test(2, f),
+        lambda f: one_lane_follow_test(3, 3, 3, f),
+        lambda f: one_lane_follow_test(4, 3, 6, f),
+        lambda f: one_lane_follow_test(5, 3, 9, f),
+        lambda f: one_lane_follow_test(6, 3, 12, f),
+        lambda f: hazard_test(9, 2, f),
+        lambda f: hazard_test(10, 3, f),
+        lambda f: safe_intersection_priority(12, 2, 2, f),
+        lambda f: safe_intersection_priority(13, 3, 3, f),
+        lambda f: safe_passing(15, 2, 4, f),
+        lambda f: safe_passing(16, 3, 4, f),
+        lambda f: safe_passing(17, 4, 4, f)
+    ]
+
+    print('Test; Nominals; Grid; Len; #Sat; #Trace1; #Trace2; #Trace3; Time1; Time2; Time3')
+    print('-------------------------------------------------------------------------------')
+
+    for test in tests:
+        run_ids = []
+        len_noms = []
+        grid_sizes = []
+        trace_max_lengths = []
+        counter_sats = []
+        counter_gets = []
+        timeXs =[]
+
+        for funct in EVALUATORS:
+            run_id, len_nom, grid_size, trace_max_length, counter_sat, counter_get, timeX = test(funct)
+            run_ids.append(run_id)
+            len_noms.append(len_nom)
+            grid_sizes.append(grid_size)
+            trace_max_lengths.append(trace_max_length)
+            counter_sats.append(counter_sat)
+            counter_gets.append(counter_get)
+            timeXs.append(timeX)
+
+        print(f'{run_ids[0]}; {len_noms[0]}; {grid_sizes[0]}; {trace_max_lengths[0]}; ', end="")
+
+        c_sat = '-'
+        for s in counter_sats:
+            if s != "-":
+                c_sat = s
+        print(c_sat, end="; ")
+
+        print(f'{counter_gets[0]}; {counter_gets[1]}; {counter_gets[2]}; {timeXs[0]}; {timeXs[1]}; {timeXs[2]}')
+
 
 def run_all_test_cases():
     """
     Runs the set of all available test cases.
     """
-    for msg, funct in zip(EVALUATOR_MSGS, EVALUATORS):
-        print(BAR_STR, msg, BAR_STR)
+    tests = [
+
         # Test 1
-        left_right_test(1, funct)
+        lambda f: left_right_test(1, f),
+
         # Test 2
-        same_name_test(2, funct)
+        lambda f: same_name_test(2, f),
+
         # Test 3
-        one_lane_follow_test(3, 3, 3, funct)
-        one_lane_follow_test(4, 3, 6, funct)
-        one_lane_follow_test(5, 3, 9, funct)
-        one_lane_follow_test(6, 3, 12, funct)
-        one_lane_follow_test(7, 3, 15, funct)
-        one_lane_follow_test(8, 3, 18, funct)
+        lambda f: one_lane_follow_test(3, 3, 3, f),
+        lambda f: one_lane_follow_test(4, 3, 6, f),
+        lambda f: one_lane_follow_test(5, 3, 9, f),
+        lambda f: one_lane_follow_test(6, 3, 12, f),
+        lambda f: one_lane_follow_test(7, 3, 15, f),
+        lambda f: one_lane_follow_test(8, 3, 18, f),
+
         # Test 4
-        hazard_test(9, 2, funct)
-        hazard_test(10, 3, funct)
-        hazard_test(11, 4, funct)
+        lambda f: hazard_test(9, 2, f),
+        lambda f: hazard_test(10, 3, f),
+        lambda f: hazard_test(11, 4, f),
+
         # Test 5
-        safe_intersection_priority(12, 2, 2, funct)
-        safe_intersection_priority(13, 3, 3, funct)
-        safe_intersection_priority(14, 4, 4, funct)
+        lambda f: safe_intersection_priority(12, 2, 2, f),
+        lambda f: safe_intersection_priority(13, 3, 3, f),
+        lambda f: safe_intersection_priority(14, 4, 4, f),
+
         # Test 6
-        safe_passing(15, 2, 4, funct)
-        safe_passing(16, 3, 4, funct)
-        safe_passing(17, 4, 4, funct)
-        safe_passing(18, 5, 4, funct)
+        lambda f: safe_passing(15, 2, 4, f),
+        lambda f: safe_passing(16, 3, 4, f),
+        lambda f: safe_passing(17, 4, 4, f),
+        lambda f: safe_passing(18, 5, 4, f),
+
         # Test 7
-        join_platoon(19, 3, 2, 5, funct)
-        join_platoon(20, 3, 3, 5, funct)
-        join_platoon(21, 3, 4, 5, funct)
-        join_platoon(22, 3, 5, 5, funct)
+        lambda f: join_platoon(19, 3, 2, 5, f),
+        lambda f: join_platoon(20, 3, 3, 5, f),
+        lambda f: join_platoon(21, 3, 4, 5, f),
+        lambda f: join_platoon(22, 3, 5, 5, f),
+    ]
+
+    print('Test; Nominals; Grid; Len; #Sat; #Trace1; #Trace2; #Trace3; Time1; Time2; Time3')
+    print('-------------------------------------------------------------------------------')
+
+    for test in tests:
+        run_ids = []
+        len_noms = []
+        grid_sizes = []
+        trace_max_lengths = []
+        counter_sats = []
+        counter_gets = []
+        timeXs = []
+
+        for funct in EVALUATORS:
+            run_id, len_nom, grid_size, trace_max_length, counter_sat, counter_get, timeX = test(funct)
+            run_ids.append(run_id)
+            len_noms.append(len_nom)
+            grid_sizes.append(grid_size)
+            trace_max_lengths.append(trace_max_length)
+            counter_sats.append(counter_sat)
+            counter_gets.append(counter_get)
+            timeXs.append(timeX)
+
+        print(f'{run_ids[0]}; {len_noms[0]}; {grid_sizes[0]}; {trace_max_lengths[0]}; ', end="")
+
+        c_sat = '-'
+        for s in counter_sats:
+            if s != "-":
+                c_sat = s
+        print(c_sat, end="; ")
+
+        print(f'{counter_gets[0]}; {counter_gets[1]}; {counter_gets[2]}; {timeXs[0]}; {timeXs[1]}; {timeXs[2]}')
+
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Checker experiment runner")
@@ -340,7 +411,7 @@ def main():
     road_width = int(getattr(args, 'road_width'))
     max_trace_length = int(getattr(args, 'max_trace_length'))
 
-    if int(getattr(args, 'max_trace_length')) == 1:
+    if int(getattr(args, 'show_traces')) == 1:
         show_traces = True
     else:
         show_traces = False
@@ -378,7 +449,12 @@ def main():
     if not conclusions:
         raise ValueError("No conclusions found in the file.")
 
-    return run_evaluator(1, args.props, args.noms, assumptions, conclusions, (road_length, road_width), max_trace_length, show_traces, checker)
+    run_id, len_nom, grid_size, trace_max_length, counter_sat, counter_get, timeX = run_evaluator(1, args.props, args.noms, assumptions, conclusions, (road_length, road_width), max_trace_length, show_traces, checker)
+
+    print('Test; Nominals; Grid; Len; #Sat; #Trace1; Time1')
+    print('-------------------------------------------------------------------------------')
+    print(f'{run_id}; {len_nom}; {grid_size}; {trace_max_length}; {counter_sat}; {counter_get}; {timeX}')
+
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 
-# Hybrid Spatio-Temporal Model Checker
-**Paper Title:** Hybrid Spatio-Temporal Logic for Automotive Applications: Modeling and Model-Checking 
+# Hybrid Spatiotemporal Model Checker
+**Paper Title:** Hybrid Spatiotemporal Logic for Automotive Applications: Modeling and Model-Checking 
 
 **Authors:** Radu-Florin Tulcan, Rose Bohrer, Yoàv Montacute, Kevin Zhou, Yusuke Kawamoto, and Ichiro Hasuo
 
@@ -8,7 +8,7 @@
 This project has been tested with Python v3.9 and v3.12
 
 ## Description
-This project is the implementation of the model checker for the _Hybrid Spatio-Temporal Logic for
+This project is the implementation of the model checker for the _Hybrid Spatiotemporal Logic for
 Automotive Safety_. This file contains metadata about the implementation, information about the project structure,
 and about the parsable syntax of our logic. It also contains information about how the different versions of our model checker
 can be used, as well as some insights about the experiments conducted, which highlight the capabilities of our logic and model

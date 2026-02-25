@@ -50,7 +50,7 @@ def generate_traces(props: list[str], noms: list[str], max_trace_length: int, gr
             yield list(tup)
 
 
-def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length, show_traces):
+def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length, show_traces) -> (int, int):
     """
     Prints the number of traces and, if parameter show_traces, also the traces where spatial points have
     been found in which the given formula holds.
@@ -86,5 +86,4 @@ def evaluate(props, noms, assumptions, conclusions, grid_size, max_trace_length,
             counter_sat = counter_sat + 1
         counter_gen = counter_gen + 1
 
-    print("|Sat:", counter_gen)
-    print("|TraceX", counter_sat)
+    return counter_sat, counter_gen
