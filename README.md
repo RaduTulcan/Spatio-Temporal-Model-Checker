@@ -69,91 +69,48 @@ instructions on writing and testing new formulas of your own, and see section "I
 instructions on code-reviewing the source code. See section "Experiments" for detailed explanations of how we modeled each major test.
 
 ### Interpreting the Output (AEC)
+ NOTE TO AEC : We revised the output to match the table format suggested by the reviewers. We apologize for not doing so earlier.
+ This section describes the revised output format.
+
 The modes --quick and --all should be checked for correctness against Table 1.
 Mode --quick evaluates tests 1,2,3,4,5,6,9,10,12,13,15,16,17 and 
 --all evaluates all tests. Both flags test all three checkers.
 
-All tests for the baseline algorithm are run first, then the optimized algorithm, then the motion algorithm. 
-A banner is displayed at the top of each:
-```
- ###########################################################
-# Running BASELINE algorithm (columns TraceX=Trace1, TimeX=Time1)
- ###########################################################
-```
-Before running each test, we print the raw abstract syntax of the test formula for the AEC's reference, then print columns 
-"Noms","Grid", and "Len". These columns are part of the input, i.e., part of the test specification.
+The output will be displayed in delimiter-separated values (semicolon-separated) format.
+A header is displayed, describing all columns of the table.
+Tests are run one at a time, i.e., all three algorithms are run for the first test before proceeding to the second.
+Once all three algorithms complete, the next row of the table prints.
+Printed output should appear at least once every 30 minutes (much less for fast test cases).
 
-After the test completes, we print columns Sat, TraceX, and TimeX. The letter X means the column differs for each checker 
-(Baseline=1, Optimized=2,Motion=3). Although the column Sat is also an output, all three algorithms will produce the same 
-value if implemented correctly.
-
-You are welcome to check the values against Table 1 individually as they print, but we explain how to reconstruct your own 
-Table 1 as this may make the comparison easier.
+The following table is an example run by one of the authors.
 
 ```
-Suppose Test 1 produces the following output for each of the three checkers:
- ###########################################################
-# Running BASELINE algorithm (columns TraceX=Trace1, TimeX=Time1)
- ###########################################################
-| Test  1  started
-|--------------------
-|[Not in Table 1]Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
-|Noms:1,Grid:(3, 3),Len:3
-|Sat: 819
-|TraceX 819
-|TimeX: 0.019541955000022426
-
- ###########################################################
-# Running OPTIMIZED algorithm (columns TraceX=Trace2, TimeX=Time2)
- ###########################################################
-| Test  1  started
-|--------------------
-|[Not in Table 1]Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
-|Noms:1,Grid:(3, 3),Len:3
-|Sat: 819
-|TraceX: 819
-|TimeX: 0.01872259700030554
-
- ###########################################################
-# Running MOTION algorithm (columns TraceX=Trace3, TimeX=Time3)
- ###########################################################
-| Test  1  started
-|--------------------
-|[Not in Table 1]Formula to check: G((Left(Right z)) ↔ (Right(Left z)))
-|Noms:1,Grid:(3, 3),Len:3
-|Sat: 819
-|TraceX: 819
-|TimeX: 0.021883641000385978
+Test; Nominals; Grid; Len; #Sat; #Trace1; #Trace2; #Trace3; Time1; Time2; Time3
+-------------------------------------------------------------------------------
+1; 1; (3, 3); 3; 819; 819; 819; 819; 0.03716773200000034; 0.03712973300000044; 0.03992743000w000587
+2; 2; (3, 3); 3; 819; 538083; 819; 538083; 3.7923480649999988; 0.015061762000001977; 4.946865924000008
+3; 2; (3, 1); 3; 9; 819; 258; 270; 0.014349297999999067; 0.01910730299999841; 0.006025803999989421
+4; 2; (6, 1); 3; 30; 47988; 27930; 4752; 1.4389156609999958; 3.2547366950000054; 0.14877714799999353
+5; 2; (9, 1); 3; 51; 538083; 378504; 24786; 23.04235685900001; 62.408909518000016; 1.0796061880000138
+6; 2; (12, 1); 3; 72; 3006864; 2317524; 79488; 164.72859127499999; 499.78983279100004; 4.517372851999994
+9; 2; (2, 2); 2; 32; 65792; 65792; 65792; 0.45820572799993897; 0.4590834310000673; 0.5815292339999587
+10; 2; (2, 2); 3; 2080; 16843008; 16843008; 16843008; 107.26402025599998; 106.9159558660001; 139.56479126900012
+12; 2; (2, 2); 2; 6; 272; 156; 48; 0.007147589000169319; 0.010924726999974155; 0.003130738999971072
+13; 2; (3, 3); 3; 24; 538083; 378504; 2754; 23.42363127700014; 56.464471282999966; 0.1858928480000941
+15; 2; (4, 2); 2; 5; 4160; 812; 480; 0.150144482000087; 0.14052099000014096; 0.030547789000138437
+16; 2; (4, 2); 3; 17; 266304; 22764; 6624; 10.060745548000114; 5.2045411530000365; 0.39718149399982394
+17; 2; (4, 2); 4; 21; -; 637420; 88544; -; 183.64836666399992; 5.736927527999796
 ```
-The message 'Test  1  started' indicates the Test column equals 1.
-The columns Noms=1, Grid=(3, 3), and Len=3 are inputs and need to match Table 1 exactly.
-The output column Sat=819 needs to match Table 1 exactly, and all 3 checkers should provide the same value.
-The output columns Trace1=819,Trace2=819,Trace3=819 must match Table 1 exactly. Trace1=Trace2=Trace3 is not true in general,
-but happens to be true in tests 1,9,10.
-The output columns Time1=0.0185,Time2=0.0188,Time3=0.0219 will not match Table 1 exactly. We reported 3 significant digits 
-for purposes of readability. The authors observed variation between successive trials, and the times should be multiplied by 
-a constant factor if your machine is faster or slower.
 
-Thus, we get the following row for Table 1, Test 1:
-
-Test Noms Grid Len #Sat #Trace1 #Trace2 #Trace3 Time1 Time2 Time3
-1 1 (3,3) 3 819 819 819 819 0.0185 0.0188 0.0219
-
-In this example, Time1 and Time3 are a bit faster than Table 1 and Time2 is slower, though within the usual variance.
+The output columns Time1,Time2,Time3 will not match Table 1 exactly. 
+The authors observed significant variation between successive trials.
+For example, the example was produced while many other processes were running, leading to slower results compared to Table 1.
+Times should be multiplied by a constant factor if your machine is faster or slower.
 
 If a test does not finish in 10 minutes, it will time out. This corresponds to "-" in the columns TraceX and TimeX.
-When a timeout occurs, the output will follow this format: 
-
-```
- Test  11  started
-|--------------------
-|[Not in Table 1]Formula to check: @z0(((Right z1) ∧ ((Front(G h)) | (Front(Front(G h))))) ∧ ((@z0(↓z2(X(@z0((Back z2) ∧ (G(¬ h))))))) U (@z0(↓z2(X(@z0(((Left z2) ∧ ((Front z1) | (Front(Front z1)))) ∧ (((Front ⊤) → (Front(G(¬ h)))) ∧ ((Front(Front ⊤)) → (Front(Front(G(¬ h)))))))))))))
-|Noms:2,Grid:(2, 2),Len:4
-=====================   TIMED OUT ===========================
-```
-Note that the column "Sat" is not printed when a timeout occurs. If all three algorithms time out, we write "-" in 
-the Sat column. If at least one algorithm terminates, we use the "Sat" value from the terminating algorithm(s).
-
+The column "Sat" is an output, but should be the same for all three algorithms.
+If all three algorithms time out, we write "-" in the Sat column. 
+If at least one algorithm terminates, we use the "Sat" value from the terminating algorithm(s).
 
 ## Custom Usage and Logic Syntax
 Our artifact allows you to input custom models of your choice, which is a good opportunity for the AEC to test edge
